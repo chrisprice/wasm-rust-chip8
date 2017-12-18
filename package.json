@@ -1,0 +1,31 @@
+{
+  "name": "wasm-rust-chip8",
+  "version": "1.0.0",
+  "description": "A CHIP-8 emulator written in Rust and compiled to WebAssembly. Just for the fun of it!",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrisprice/wasm-rust-chip8.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chrisprice/wasm-rust-chip8/issues"
+  },
+  "homepage": "https://github.com/chrisprice/wasm-rust-chip8#readme",
+  "devDependencies": {
+    "jest": "^21.2.1"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "wat",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.wat$": "<rootDir>/scripts/build.js"
+    }
+  }
+}

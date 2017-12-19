@@ -3,7 +3,7 @@
 ; section "Type" (1)
 0000008: 01                                        ; section code
 0000009: 00                                        ; section size (guess)
-000000a: 03                                        ; num types
+000000a: 05                                        ; num types
 ; type 0
 000000b: 60                                        ; func
 000000c: 02                                        ; num params
@@ -19,754 +19,971 @@
 0000015: 7f                                        ; i32
 ; type 2
 0000016: 60                                        ; func
-0000017: 00                                        ; num params
-0000018: 00                                        ; num results
-0000009: 0f                                        ; FIXUP section size
+0000017: 03                                        ; num params
+0000018: 7f                                        ; i32
+0000019: 7f                                        ; i32
+000001a: 7f                                        ; i32
+000001b: 00                                        ; num results
+; type 3
+000001c: 60                                        ; func
+000001d: 01                                        ; num params
+000001e: 7f                                        ; i32
+000001f: 00                                        ; num results
+; type 4
+0000020: 60                                        ; func
+0000021: 00                                        ; num params
+0000022: 00                                        ; num results
+0000009: 19                                        ; FIXUP section size
 ; section "Import" (2)
-0000019: 02                                        ; section code
-000001a: 00                                        ; section size (guess)
-000001b: 01                                        ; num imports
+0000023: 02                                        ; section code
+0000024: 00                                        ; section size (guess)
+0000025: 01                                        ; num imports
 ; import header 0
-000001c: 01                                        ; string length
-000001d: 5f                                       _  ; import module name
-000001e: 03                                        ; string length
-000001f: 6d65 6d                                  mem  ; import field name
-0000022: 02                                        ; import kind
-0000023: 00                                        ; limits: flags
-0000024: 01                                        ; limits: initial
-000001a: 0a                                        ; FIXUP section size
+0000026: 01                                        ; string length
+0000027: 5f                                       _  ; import module name
+0000028: 03                                        ; string length
+0000029: 6d65 6d                                  mem  ; import field name
+000002c: 02                                        ; import kind
+000002d: 00                                        ; limits: flags
+000002e: 01                                        ; limits: initial
+0000024: 0a                                        ; FIXUP section size
 ; section "Function" (3)
-0000025: 03                                        ; section code
-0000026: 00                                        ; section size (guess)
-0000027: 18                                        ; num functions
-0000028: 01                                        ; function 0 signature index
-0000029: 00                                        ; function 1 signature index
-000002a: 00                                        ; function 2 signature index
-000002b: 00                                        ; function 3 signature index
-000002c: 00                                        ; function 4 signature index
-000002d: 00                                        ; function 5 signature index
-000002e: 00                                        ; function 6 signature index
-000002f: 00                                        ; function 7 signature index
-0000030: 00                                        ; function 8 signature index
-0000031: 00                                        ; function 9 signature index
-0000032: 00                                        ; function 10 signature index
-0000033: 00                                        ; function 11 signature index
-0000034: 00                                        ; function 12 signature index
-0000035: 00                                        ; function 13 signature index
-0000036: 00                                        ; function 14 signature index
-0000037: 00                                        ; function 15 signature index
-0000038: 00                                        ; function 16 signature index
-0000039: 00                                        ; function 17 signature index
-000003a: 00                                        ; function 18 signature index
-000003b: 00                                        ; function 19 signature index
-000003c: 00                                        ; function 20 signature index
-000003d: 00                                        ; function 21 signature index
-000003e: 00                                        ; function 22 signature index
-000003f: 02                                        ; function 23 signature index
-0000026: 19                                        ; FIXUP section size
+000002f: 03                                        ; section code
+0000030: 00                                        ; section size (guess)
+0000031: 1f                                        ; num functions
+0000032: 01                                        ; function 0 signature index
+0000033: 02                                        ; function 1 signature index
+0000034: 00                                        ; function 2 signature index
+0000035: 00                                        ; function 3 signature index
+0000036: 00                                        ; function 4 signature index
+0000037: 00                                        ; function 5 signature index
+0000038: 00                                        ; function 6 signature index
+0000039: 00                                        ; function 7 signature index
+000003a: 00                                        ; function 8 signature index
+000003b: 00                                        ; function 9 signature index
+000003c: 00                                        ; function 10 signature index
+000003d: 00                                        ; function 11 signature index
+000003e: 00                                        ; function 12 signature index
+000003f: 00                                        ; function 13 signature index
+0000040: 00                                        ; function 14 signature index
+0000041: 00                                        ; function 15 signature index
+0000042: 00                                        ; function 16 signature index
+0000043: 00                                        ; function 17 signature index
+0000044: 00                                        ; function 18 signature index
+0000045: 00                                        ; function 19 signature index
+0000046: 00                                        ; function 20 signature index
+0000047: 00                                        ; function 21 signature index
+0000048: 00                                        ; function 22 signature index
+0000049: 00                                        ; function 23 signature index
+000004a: 00                                        ; function 24 signature index
+000004b: 00                                        ; function 25 signature index
+000004c: 03                                        ; function 26 signature index
+000004d: 03                                        ; function 27 signature index
+000004e: 03                                        ; function 28 signature index
+000004f: 03                                        ; function 29 signature index
+0000050: 04                                        ; function 30 signature index
+0000030: 20                                        ; FIXUP section size
 ; section "Table" (4)
-0000040: 04                                        ; section code
-0000041: 00                                        ; section size (guess)
-0000042: 01                                        ; num tables
-; table 0
-0000043: 70                                        ; anyfunc
-0000044: 01                                        ; limits: flags
-0000045: 1f                                        ; limits: initial
-0000046: 1f                                        ; limits: max
-0000041: 05                                        ; FIXUP section size
-; section "Export" (7)
-0000047: 07                                        ; section code
-0000048: 00                                        ; section size (guess)
-0000049: 01                                        ; num exports
-000004a: 04                                        ; string length
-000004b: 7469 636b                                tick  ; export name
-000004f: 00                                        ; export kind
-0000050: 17                                        ; export func index
-0000048: 08                                        ; FIXUP section size
-; section "Elem" (9)
-0000051: 09                                        ; section code
+0000051: 04                                        ; section code
 0000052: 00                                        ; section size (guess)
-0000053: 01                                        ; num elem segments
+0000053: 01                                        ; num tables
+; table 0
+0000054: 70                                        ; anyfunc
+0000055: 01                                        ; limits: flags
+0000056: 1f                                        ; limits: initial
+0000057: 1f                                        ; limits: max
+0000052: 05                                        ; FIXUP section size
+; section "Export" (7)
+0000058: 07                                        ; section code
+0000059: 00                                        ; section size (guess)
+000005a: 01                                        ; num exports
+000005b: 04                                        ; string length
+000005c: 7469 636b                                tick  ; export name
+0000060: 00                                        ; export kind
+0000061: 1e                                        ; export func index
+0000059: 08                                        ; FIXUP section size
+; section "Elem" (9)
+0000062: 09                                        ; section code
+0000063: 00                                        ; section size (guess)
+0000064: 01                                        ; num elem segments
 ; elem segment header 0
-0000054: 00                                        ; table index
-0000055: 41                                        ; i32.const
-0000056: 00                                        ; i32 literal
-0000057: 0b                                        ; end
-0000058: 1f                                        ; num function indices
-0000059: 02                                        ; function index
-000005a: 04                                        ; function index
-000005b: 05                                        ; function index
-000005c: 06                                        ; function index
-000005d: 07                                        ; function index
-000005e: 08                                        ; function index
-000005f: 09                                        ; function index
-0000060: 0a                                        ; function index
-0000061: 0b                                        ; function index
-0000062: 15                                        ; function index
-0000063: 01                                        ; function index
-0000064: 16                                        ; function index
-0000065: 01                                        ; function index
-0000066: 01                                        ; function index
-0000067: 01                                        ; function index
-0000068: 01                                        ; function index
-0000069: 0c                                        ; function index
-000006a: 0d                                        ; function index
-000006b: 0e                                        ; function index
-000006c: 0f                                        ; function index
-000006d: 10                                        ; function index
-000006e: 11                                        ; function index
-000006f: 12                                        ; function index
-0000070: 13                                        ; function index
-0000071: 01                                        ; function index
-0000072: 01                                        ; function index
-0000073: 01                                        ; function index
-0000074: 01                                        ; function index
-0000075: 01                                        ; function index
-0000076: 01                                        ; function index
-0000077: 14                                        ; function index
-0000052: 25                                        ; FIXUP section size
+0000065: 00                                        ; table index
+0000066: 41                                        ; i32.const
+0000067: 00                                        ; i32 literal
+0000068: 0b                                        ; end
+0000069: 1f                                        ; num function indices
+000006a: 03                                        ; function index
+000006b: 05                                        ; function index
+000006c: 06                                        ; function index
+000006d: 07                                        ; function index
+000006e: 08                                        ; function index
+000006f: 09                                        ; function index
+0000070: 0a                                        ; function index
+0000071: 0b                                        ; function index
+0000072: 0c                                        ; function index
+0000073: 16                                        ; function index
+0000074: 17                                        ; function index
+0000075: 18                                        ; function index
+0000076: 02                                        ; function index
+0000077: 02                                        ; function index
+0000078: 02                                        ; function index
+0000079: 19                                        ; function index
+000007a: 0d                                        ; function index
+000007b: 0e                                        ; function index
+000007c: 0f                                        ; function index
+000007d: 10                                        ; function index
+000007e: 11                                        ; function index
+000007f: 12                                        ; function index
+0000080: 13                                        ; function index
+0000081: 14                                        ; function index
+0000082: 02                                        ; function index
+0000083: 02                                        ; function index
+0000084: 02                                        ; function index
+0000085: 02                                        ; function index
+0000086: 02                                        ; function index
+0000087: 02                                        ; function index
+0000088: 15                                        ; function index
+0000063: 25                                        ; FIXUP section size
 ; section "Code" (10)
-0000078: 0a                                        ; section code
-0000079: 00                                        ; section size (guess)
-000007a: 18                                        ; num functions
+0000089: 0a                                        ; section code
+000008a: 00                                        ; section size (guess)
+000008b: 1f                                        ; num functions
 ; function body 0
-000007b: 00                                        ; func body size (guess)
-000007c: 00                                        ; local decl count
-000007d: 41                                        ; i32.const
-000007e: 02                                        ; i32 literal
-000007f: 20                                        ; get_local
-0000080: 00                                        ; local index
-0000081: 6a                                        ; i32.add
-0000082: 0b                                        ; end
-000007b: 07                                        ; FIXUP func body size
-; function body 1
-0000083: 00                                        ; func body size (guess)
-0000084: 00                                        ; local decl count
-0000085: 20                                        ; get_local
-0000086: 00                                        ; local index
-0000087: 10                                        ; call
-0000088: 00                                        ; function index
-0000089: 0b                                        ; end
-0000083: 06                                        ; FIXUP func body size
-; function body 2
-000008a: 00                                        ; func body size (guess)
-000008b: 00                                        ; local decl count
-000008c: 20                                        ; get_local
-000008d: 01                                        ; local index
+000008c: 00                                        ; func body size (guess)
+000008d: 00                                        ; local decl count
 000008e: 41                                        ; i32.const
-000008f: e001                                      ; i32 literal
-0000091: 46                                        ; i32.eq
-0000092: 04                                        ; if
-0000093: 7f                                        ; i32
-0000094: 41                                        ; i32.const
-0000095: 00                                        ; i32 literal
-0000096: 05                                        ; else
-0000097: 20                                        ; get_local
-0000098: 01                                        ; local index
-0000099: 41                                        ; i32.const
-000009a: ee01                                      ; i32 literal
-000009c: 46                                        ; i32.eq
-000009d: 04                                        ; if
-000009e: 7f                                        ; i32
+000008f: 02                                        ; i32 literal
+0000090: 20                                        ; get_local
+0000091: 00                                        ; local index
+0000092: 6a                                        ; i32.add
+0000093: 0b                                        ; end
+000008c: 07                                        ; FIXUP func body size
+; function body 1
+0000094: 00                                        ; func body size (guess)
+0000095: 01                                        ; local decl count
+0000096: 01                                        ; local type count
+0000097: 7f                                        ; i32
+0000098: 03                                        ; loop
+0000099: 40                                        ; void
+000009a: 20                                        ; get_local
+000009b: 01                                        ; local index
+000009c: 20                                        ; get_local
+000009d: 03                                        ; local index
+000009e: 6a                                        ; i32.add
 000009f: 20                                        ; get_local
 00000a0: 00                                        ; local index
 00000a1: 20                                        ; get_local
-00000a2: 01                                        ; local index
-00000a3: 10                                        ; call
-00000a4: 03                                        ; function index
-00000a5: 05                                        ; else
-00000a6: 20                                        ; get_local
-00000a7: 00                                        ; local index
-00000a8: 20                                        ; get_local
-00000a9: 01                                        ; local index
-00000aa: 10                                        ; call
-00000ab: 01                                        ; function index
-00000ac: 0b                                        ; end
-00000ad: 0b                                        ; end
-00000ae: 0b                                        ; end
-000008a: 24                                        ; FIXUP func body size
+00000a2: 03                                        ; local index
+00000a3: 6a                                        ; i32.add
+00000a4: 2d                                        ; i32.load8_u
+00000a5: 00                                        ; alignment
+00000a6: 00                                        ; load offset
+00000a7: 3a                                        ; i32.store8
+00000a8: 00                                        ; alignment
+00000a9: 00                                        ; store offset
+00000aa: 20                                        ; get_local
+00000ab: 03                                        ; local index
+00000ac: 41                                        ; i32.const
+00000ad: 01                                        ; i32 literal
+00000ae: 6a                                        ; i32.add
+00000af: 22                                        ; tee_local
+00000b0: 03                                        ; local index
+00000b1: 20                                        ; get_local
+00000b2: 02                                        ; local index
+00000b3: 46                                        ; i32.eq
+00000b4: 0d                                        ; br_if
+00000b5: 00                                        ; break depth
+00000b6: 0b                                        ; end
+00000b7: 0b                                        ; end
+0000094: 23                                        ; FIXUP func body size
+; function body 2
+00000b8: 00                                        ; func body size (guess)
+00000b9: 00                                        ; local decl count
+00000ba: 20                                        ; get_local
+00000bb: 00                                        ; local index
+00000bc: 10                                        ; call
+00000bd: 00                                        ; function index
+00000be: 0b                                        ; end
+00000b8: 06                                        ; FIXUP func body size
 ; function body 3
-00000af: 00                                        ; func body size (guess)
-00000b0: 01                                        ; local decl count
-00000b1: 01                                        ; local type count
-00000b2: 7f                                        ; i32
-00000b3: 41                                        ; i32.const
-00000b4: cf1d                                      ; i32 literal
-00000b6: 2d                                        ; i32.load8_u
-00000b7: 00                                        ; alignment
-00000b8: 00                                        ; load offset
-00000b9: 41                                        ; i32.const
-00000ba: 02                                        ; i32 literal
-00000bb: 6b                                        ; i32.sub
-00000bc: 21                                        ; set_local
-00000bd: 02                                        ; local index
-00000be: 41                                        ; i32.const
-00000bf: cf1d                                      ; i32 literal
+00000bf: 00                                        ; func body size (guess)
+00000c0: 00                                        ; local decl count
 00000c1: 20                                        ; get_local
-00000c2: 02                                        ; local index
-00000c3: 3a                                        ; i32.store8
-00000c4: 00                                        ; alignment
-00000c5: 00                                        ; store offset
-00000c6: 20                                        ; get_local
-00000c7: 02                                        ; local index
-00000c8: 2f                                        ; i32.load16_u
-00000c9: 01                                        ; alignment
-00000ca: d01d                                      ; load offset
-00000cc: 0b                                        ; end
-00000af: 1d                                        ; FIXUP func body size
+00000c2: 01                                        ; local index
+00000c3: 41                                        ; i32.const
+00000c4: e001                                      ; i32 literal
+00000c6: 46                                        ; i32.eq
+00000c7: 04                                        ; if
+00000c8: 7f                                        ; i32
+00000c9: 41                                        ; i32.const
+00000ca: 00                                        ; i32 literal
+00000cb: 05                                        ; else
+00000cc: 20                                        ; get_local
+00000cd: 01                                        ; local index
+00000ce: 41                                        ; i32.const
+00000cf: ee01                                      ; i32 literal
+00000d1: 46                                        ; i32.eq
+00000d2: 04                                        ; if
+00000d3: 7f                                        ; i32
+00000d4: 20                                        ; get_local
+00000d5: 00                                        ; local index
+00000d6: 20                                        ; get_local
+00000d7: 01                                        ; local index
+00000d8: 10                                        ; call
+00000d9: 04                                        ; function index
+00000da: 05                                        ; else
+00000db: 20                                        ; get_local
+00000dc: 00                                        ; local index
+00000dd: 20                                        ; get_local
+00000de: 01                                        ; local index
+00000df: 10                                        ; call
+00000e0: 02                                        ; function index
+00000e1: 0b                                        ; end
+00000e2: 0b                                        ; end
+00000e3: 0b                                        ; end
+00000bf: 24                                        ; FIXUP func body size
 ; function body 4
-00000cd: 00                                        ; func body size (guess)
-00000ce: 00                                        ; local decl count
-00000cf: 41                                        ; i32.const
-00000d0: ff1f                                      ; i32 literal
-00000d2: 20                                        ; get_local
-00000d3: 01                                        ; local index
-00000d4: 71                                        ; i32.and
-00000d5: 0b                                        ; end
-00000cd: 08                                        ; FIXUP func body size
-; function body 5
-00000d6: 00                                        ; func body size (guess)
-00000d7: 01                                        ; local decl count
-00000d8: 01                                        ; local type count
-00000d9: 7f                                        ; i32
-00000da: 41                                        ; i32.const
-00000db: cf1d                                      ; i32 literal
-00000dd: 2d                                        ; i32.load8_u
-00000de: 00                                        ; alignment
-00000df: 00                                        ; load offset
-00000e0: 21                                        ; set_local
-00000e1: 02                                        ; local index
-00000e2: 20                                        ; get_local
-00000e3: 02                                        ; local index
-00000e4: 20                                        ; get_local
-00000e5: 00                                        ; local index
-00000e6: 10                                        ; call
-00000e7: 00                                        ; function index
-00000e8: 3b                                        ; i32.store16
-00000e9: 01                                        ; alignment
-00000ea: d01d                                      ; store offset
-00000ec: 41                                        ; i32.const
-00000ed: cf1d                                      ; i32 literal
-00000ef: 20                                        ; get_local
-00000f0: 02                                        ; local index
-00000f1: 10                                        ; call
-00000f2: 00                                        ; function index
-00000f3: 3a                                        ; i32.store8
-00000f4: 00                                        ; alignment
-00000f5: 00                                        ; store offset
+00000e4: 00                                        ; func body size (guess)
+00000e5: 01                                        ; local decl count
+00000e6: 01                                        ; local type count
+00000e7: 7f                                        ; i32
+00000e8: 41                                        ; i32.const
+00000e9: cf1d                                      ; i32 literal
+00000eb: 2d                                        ; i32.load8_u
+00000ec: 00                                        ; alignment
+00000ed: 00                                        ; load offset
+00000ee: 41                                        ; i32.const
+00000ef: 02                                        ; i32 literal
+00000f0: 6b                                        ; i32.sub
+00000f1: 21                                        ; set_local
+00000f2: 02                                        ; local index
+00000f3: 41                                        ; i32.const
+00000f4: cf1d                                      ; i32 literal
 00000f6: 20                                        ; get_local
-00000f7: 01                                        ; local index
-00000f8: 41                                        ; i32.const
-00000f9: ff1f                                      ; i32 literal
-00000fb: 71                                        ; i32.and
-00000fc: 0b                                        ; end
-00000d6: 26                                        ; FIXUP func body size
+00000f7: 02                                        ; local index
+00000f8: 3a                                        ; i32.store8
+00000f9: 00                                        ; alignment
+00000fa: 00                                        ; store offset
+00000fb: 20                                        ; get_local
+00000fc: 02                                        ; local index
+00000fd: 2f                                        ; i32.load16_u
+00000fe: 01                                        ; alignment
+00000ff: d01d                                      ; load offset
+0000101: 0b                                        ; end
+00000e4: 1d                                        ; FIXUP func body size
+; function body 5
+0000102: 00                                        ; func body size (guess)
+0000103: 00                                        ; local decl count
+0000104: 41                                        ; i32.const
+0000105: ff1f                                      ; i32 literal
+0000107: 20                                        ; get_local
+0000108: 01                                        ; local index
+0000109: 71                                        ; i32.and
+000010a: 0b                                        ; end
+0000102: 08                                        ; FIXUP func body size
 ; function body 6
-00000fd: 00                                        ; func body size (guess)
-00000fe: 00                                        ; local decl count
-00000ff: 20                                        ; get_local
-0000100: 01                                        ; local index
-0000101: 41                                        ; i32.const
-0000102: 801e                                      ; i32 literal
-0000104: 71                                        ; i32.and
-0000105: 41                                        ; i32.const
-0000106: 08                                        ; i32 literal
-0000107: 76                                        ; i32.shr_u
-0000108: 2d                                        ; i32.load8_u
-0000109: 00                                        ; alignment
-000010a: b01d                                      ; load offset
-000010c: 20                                        ; get_local
-000010d: 01                                        ; local index
-000010e: 41                                        ; i32.const
-000010f: ff01                                      ; i32 literal
-0000111: 71                                        ; i32.and
-0000112: 46                                        ; i32.eq
-0000113: 04                                        ; if
-0000114: 40                                        ; void
-0000115: 20                                        ; get_local
-0000116: 00                                        ; local index
-0000117: 10                                        ; call
-0000118: 00                                        ; function index
-0000119: 21                                        ; set_local
+000010b: 00                                        ; func body size (guess)
+000010c: 01                                        ; local decl count
+000010d: 01                                        ; local type count
+000010e: 7f                                        ; i32
+000010f: 41                                        ; i32.const
+0000110: cf1d                                      ; i32 literal
+0000112: 2d                                        ; i32.load8_u
+0000113: 00                                        ; alignment
+0000114: 00                                        ; load offset
+0000115: 21                                        ; set_local
+0000116: 02                                        ; local index
+0000117: 20                                        ; get_local
+0000118: 02                                        ; local index
+0000119: 20                                        ; get_local
 000011a: 00                                        ; local index
-000011b: 0b                                        ; end
-000011c: 20                                        ; get_local
-000011d: 00                                        ; local index
-000011e: 10                                        ; call
-000011f: 00                                        ; function index
-0000120: 0b                                        ; end
-00000fd: 23                                        ; FIXUP func body size
+000011b: 10                                        ; call
+000011c: 00                                        ; function index
+000011d: 3b                                        ; i32.store16
+000011e: 01                                        ; alignment
+000011f: d01d                                      ; store offset
+0000121: 41                                        ; i32.const
+0000122: cf1d                                      ; i32 literal
+0000124: 20                                        ; get_local
+0000125: 02                                        ; local index
+0000126: 10                                        ; call
+0000127: 00                                        ; function index
+0000128: 3a                                        ; i32.store8
+0000129: 00                                        ; alignment
+000012a: 00                                        ; store offset
+000012b: 20                                        ; get_local
+000012c: 01                                        ; local index
+000012d: 41                                        ; i32.const
+000012e: ff1f                                      ; i32 literal
+0000130: 71                                        ; i32.and
+0000131: 0b                                        ; end
+000010b: 26                                        ; FIXUP func body size
 ; function body 7
-0000121: 00                                        ; func body size (guess)
-0000122: 00                                        ; local decl count
-0000123: 20                                        ; get_local
-0000124: 01                                        ; local index
-0000125: 41                                        ; i32.const
-0000126: 801e                                      ; i32 literal
-0000128: 71                                        ; i32.and
-0000129: 41                                        ; i32.const
-000012a: 08                                        ; i32 literal
-000012b: 76                                        ; i32.shr_u
-000012c: 2d                                        ; i32.load8_u
-000012d: 00                                        ; alignment
-000012e: b01d                                      ; load offset
-0000130: 20                                        ; get_local
-0000131: 01                                        ; local index
-0000132: 41                                        ; i32.const
-0000133: ff01                                      ; i32 literal
-0000135: 71                                        ; i32.and
-0000136: 47                                        ; i32.ne
-0000137: 04                                        ; if
-0000138: 40                                        ; void
-0000139: 20                                        ; get_local
-000013a: 00                                        ; local index
-000013b: 10                                        ; call
-000013c: 00                                        ; function index
-000013d: 21                                        ; set_local
-000013e: 00                                        ; local index
-000013f: 0b                                        ; end
-0000140: 20                                        ; get_local
-0000141: 00                                        ; local index
-0000142: 10                                        ; call
-0000143: 00                                        ; function index
-0000144: 0b                                        ; end
-0000121: 23                                        ; FIXUP func body size
+0000132: 00                                        ; func body size (guess)
+0000133: 00                                        ; local decl count
+0000134: 20                                        ; get_local
+0000135: 01                                        ; local index
+0000136: 41                                        ; i32.const
+0000137: 801e                                      ; i32 literal
+0000139: 71                                        ; i32.and
+000013a: 41                                        ; i32.const
+000013b: 08                                        ; i32 literal
+000013c: 76                                        ; i32.shr_u
+000013d: 2d                                        ; i32.load8_u
+000013e: 00                                        ; alignment
+000013f: b01d                                      ; load offset
+0000141: 20                                        ; get_local
+0000142: 01                                        ; local index
+0000143: 41                                        ; i32.const
+0000144: ff01                                      ; i32 literal
+0000146: 71                                        ; i32.and
+0000147: 46                                        ; i32.eq
+0000148: 04                                        ; if
+0000149: 40                                        ; void
+000014a: 20                                        ; get_local
+000014b: 00                                        ; local index
+000014c: 10                                        ; call
+000014d: 00                                        ; function index
+000014e: 21                                        ; set_local
+000014f: 00                                        ; local index
+0000150: 0b                                        ; end
+0000151: 20                                        ; get_local
+0000152: 00                                        ; local index
+0000153: 10                                        ; call
+0000154: 00                                        ; function index
+0000155: 0b                                        ; end
+0000132: 23                                        ; FIXUP func body size
 ; function body 8
-0000145: 00                                        ; func body size (guess)
-0000146: 00                                        ; local decl count
-0000147: 20                                        ; get_local
-0000148: 01                                        ; local index
-0000149: 41                                        ; i32.const
-000014a: 801e                                      ; i32 literal
-000014c: 71                                        ; i32.and
-000014d: 41                                        ; i32.const
-000014e: 08                                        ; i32 literal
-000014f: 76                                        ; i32.shr_u
-0000150: 2d                                        ; i32.load8_u
-0000151: 00                                        ; alignment
-0000152: b01d                                      ; load offset
-0000154: 20                                        ; get_local
-0000155: 01                                        ; local index
-0000156: 41                                        ; i32.const
-0000157: f001                                      ; i32 literal
-0000159: 71                                        ; i32.and
+0000156: 00                                        ; func body size (guess)
+0000157: 00                                        ; local decl count
+0000158: 20                                        ; get_local
+0000159: 01                                        ; local index
 000015a: 41                                        ; i32.const
-000015b: 04                                        ; i32 literal
-000015c: 76                                        ; i32.shr_u
-000015d: 2d                                        ; i32.load8_u
-000015e: 00                                        ; alignment
-000015f: b01d                                      ; load offset
-0000161: 46                                        ; i32.eq
-0000162: 04                                        ; if
-0000163: 40                                        ; void
-0000164: 20                                        ; get_local
-0000165: 00                                        ; local index
-0000166: 10                                        ; call
-0000167: 00                                        ; function index
-0000168: 21                                        ; set_local
-0000169: 00                                        ; local index
-000016a: 0b                                        ; end
-000016b: 20                                        ; get_local
-000016c: 00                                        ; local index
-000016d: 10                                        ; call
-000016e: 00                                        ; function index
-000016f: 0b                                        ; end
-0000145: 2a                                        ; FIXUP func body size
+000015b: 801e                                      ; i32 literal
+000015d: 71                                        ; i32.and
+000015e: 41                                        ; i32.const
+000015f: 08                                        ; i32 literal
+0000160: 76                                        ; i32.shr_u
+0000161: 2d                                        ; i32.load8_u
+0000162: 00                                        ; alignment
+0000163: b01d                                      ; load offset
+0000165: 20                                        ; get_local
+0000166: 01                                        ; local index
+0000167: 41                                        ; i32.const
+0000168: ff01                                      ; i32 literal
+000016a: 71                                        ; i32.and
+000016b: 47                                        ; i32.ne
+000016c: 04                                        ; if
+000016d: 40                                        ; void
+000016e: 20                                        ; get_local
+000016f: 00                                        ; local index
+0000170: 10                                        ; call
+0000171: 00                                        ; function index
+0000172: 21                                        ; set_local
+0000173: 00                                        ; local index
+0000174: 0b                                        ; end
+0000175: 20                                        ; get_local
+0000176: 00                                        ; local index
+0000177: 10                                        ; call
+0000178: 00                                        ; function index
+0000179: 0b                                        ; end
+0000156: 23                                        ; FIXUP func body size
 ; function body 9
-0000170: 00                                        ; func body size (guess)
-0000171: 00                                        ; local decl count
-0000172: 20                                        ; get_local
-0000173: 01                                        ; local index
-0000174: 41                                        ; i32.const
-0000175: 801e                                      ; i32 literal
-0000177: 71                                        ; i32.and
-0000178: 41                                        ; i32.const
-0000179: 08                                        ; i32 literal
-000017a: 76                                        ; i32.shr_u
-000017b: 41                                        ; i32.const
-000017c: ff01                                      ; i32 literal
-000017e: 20                                        ; get_local
-000017f: 01                                        ; local index
-0000180: 71                                        ; i32.and
-0000181: 3a                                        ; i32.store8
-0000182: 00                                        ; alignment
-0000183: b01d                                      ; store offset
-0000185: 20                                        ; get_local
-0000186: 00                                        ; local index
-0000187: 10                                        ; call
-0000188: 00                                        ; function index
-0000189: 0b                                        ; end
-0000170: 19                                        ; FIXUP func body size
+000017a: 00                                        ; func body size (guess)
+000017b: 00                                        ; local decl count
+000017c: 20                                        ; get_local
+000017d: 01                                        ; local index
+000017e: 41                                        ; i32.const
+000017f: 801e                                      ; i32 literal
+0000181: 71                                        ; i32.and
+0000182: 41                                        ; i32.const
+0000183: 08                                        ; i32 literal
+0000184: 76                                        ; i32.shr_u
+0000185: 2d                                        ; i32.load8_u
+0000186: 00                                        ; alignment
+0000187: b01d                                      ; load offset
+0000189: 20                                        ; get_local
+000018a: 01                                        ; local index
+000018b: 41                                        ; i32.const
+000018c: f001                                      ; i32 literal
+000018e: 71                                        ; i32.and
+000018f: 41                                        ; i32.const
+0000190: 04                                        ; i32 literal
+0000191: 76                                        ; i32.shr_u
+0000192: 2d                                        ; i32.load8_u
+0000193: 00                                        ; alignment
+0000194: b01d                                      ; load offset
+0000196: 46                                        ; i32.eq
+0000197: 04                                        ; if
+0000198: 40                                        ; void
+0000199: 20                                        ; get_local
+000019a: 00                                        ; local index
+000019b: 10                                        ; call
+000019c: 00                                        ; function index
+000019d: 21                                        ; set_local
+000019e: 00                                        ; local index
+000019f: 0b                                        ; end
+00001a0: 20                                        ; get_local
+00001a1: 00                                        ; local index
+00001a2: 10                                        ; call
+00001a3: 00                                        ; function index
+00001a4: 0b                                        ; end
+000017a: 2a                                        ; FIXUP func body size
 ; function body 10
-000018a: 00                                        ; func body size (guess)
-000018b: 01                                        ; local decl count
-000018c: 01                                        ; local type count
-000018d: 7f                                        ; i32
-000018e: 20                                        ; get_local
-000018f: 01                                        ; local index
-0000190: 41                                        ; i32.const
-0000191: 801e                                      ; i32 literal
-0000193: 71                                        ; i32.and
-0000194: 41                                        ; i32.const
-0000195: 08                                        ; i32 literal
-0000196: 76                                        ; i32.shr_u
-0000197: 22                                        ; tee_local
-0000198: 02                                        ; local index
-0000199: 41                                        ; i32.const
-000019a: ff01                                      ; i32 literal
-000019c: 20                                        ; get_local
-000019d: 01                                        ; local index
-000019e: 71                                        ; i32.and
-000019f: 20                                        ; get_local
-00001a0: 02                                        ; local index
-00001a1: 2d                                        ; i32.load8_u
-00001a2: 00                                        ; alignment
-00001a3: b01d                                      ; load offset
-00001a5: 6a                                        ; i32.add
-00001a6: 3a                                        ; i32.store8
-00001a7: 00                                        ; alignment
-00001a8: b01d                                      ; store offset
-00001aa: 20                                        ; get_local
-00001ab: 00                                        ; local index
-00001ac: 10                                        ; call
-00001ad: 00                                        ; function index
-00001ae: 0b                                        ; end
-000018a: 24                                        ; FIXUP func body size
-; function body 11
-00001af: 00                                        ; func body size (guess)
-00001b0: 01                                        ; local decl count
-00001b1: 01                                        ; local type count
-00001b2: 7f                                        ; i32
+00001a5: 00                                        ; func body size (guess)
+00001a6: 00                                        ; local decl count
+00001a7: 20                                        ; get_local
+00001a8: 01                                        ; local index
+00001a9: 41                                        ; i32.const
+00001aa: 801e                                      ; i32 literal
+00001ac: 71                                        ; i32.and
+00001ad: 41                                        ; i32.const
+00001ae: 08                                        ; i32 literal
+00001af: 76                                        ; i32.shr_u
+00001b0: 41                                        ; i32.const
+00001b1: ff01                                      ; i32 literal
 00001b3: 20                                        ; get_local
 00001b4: 01                                        ; local index
-00001b5: 41                                        ; i32.const
-00001b6: 801e                                      ; i32 literal
-00001b8: 71                                        ; i32.and
-00001b9: 41                                        ; i32.const
-00001ba: 08                                        ; i32 literal
-00001bb: 76                                        ; i32.shr_u
-00001bc: 22                                        ; tee_local
-00001bd: 02                                        ; local index
-00001be: 20                                        ; get_local
-00001bf: 02                                        ; local index
-00001c0: 2d                                        ; i32.load8_u
-00001c1: 00                                        ; alignment
-00001c2: b01d                                      ; load offset
-00001c4: 20                                        ; get_local
-00001c5: 01                                        ; local index
-00001c6: 41                                        ; i32.const
-00001c7: f001                                      ; i32 literal
-00001c9: 71                                        ; i32.and
-00001ca: 41                                        ; i32.const
-00001cb: 04                                        ; i32 literal
-00001cc: 76                                        ; i32.shr_u
-00001cd: 2d                                        ; i32.load8_u
-00001ce: 00                                        ; alignment
-00001cf: b01d                                      ; load offset
-00001d1: 41                                        ; i32.const
-00001d2: 10                                        ; i32 literal
-00001d3: 20                                        ; get_local
-00001d4: 01                                        ; local index
-00001d5: 41                                        ; i32.const
-00001d6: 0f                                        ; i32 literal
-00001d7: 71                                        ; i32.and
-00001d8: 6a                                        ; i32.add
-00001d9: 11                                        ; call_indirect
-00001da: 00                                        ; signature index
-00001db: 00                                        ; call_indirect reserved
-00001dc: 3a                                        ; i32.store8
-00001dd: 00                                        ; alignment
-00001de: b01d                                      ; store offset
-00001e0: 20                                        ; get_local
-00001e1: 00                                        ; local index
-00001e2: 10                                        ; call
-00001e3: 00                                        ; function index
-00001e4: 0b                                        ; end
-00001af: 35                                        ; FIXUP func body size
+00001b5: 71                                        ; i32.and
+00001b6: 3a                                        ; i32.store8
+00001b7: 00                                        ; alignment
+00001b8: b01d                                      ; store offset
+00001ba: 20                                        ; get_local
+00001bb: 00                                        ; local index
+00001bc: 10                                        ; call
+00001bd: 00                                        ; function index
+00001be: 0b                                        ; end
+00001a5: 19                                        ; FIXUP func body size
+; function body 11
+00001bf: 00                                        ; func body size (guess)
+00001c0: 01                                        ; local decl count
+00001c1: 01                                        ; local type count
+00001c2: 7f                                        ; i32
+00001c3: 20                                        ; get_local
+00001c4: 01                                        ; local index
+00001c5: 41                                        ; i32.const
+00001c6: 801e                                      ; i32 literal
+00001c8: 71                                        ; i32.and
+00001c9: 41                                        ; i32.const
+00001ca: 08                                        ; i32 literal
+00001cb: 76                                        ; i32.shr_u
+00001cc: 22                                        ; tee_local
+00001cd: 02                                        ; local index
+00001ce: 41                                        ; i32.const
+00001cf: ff01                                      ; i32 literal
+00001d1: 20                                        ; get_local
+00001d2: 01                                        ; local index
+00001d3: 71                                        ; i32.and
+00001d4: 20                                        ; get_local
+00001d5: 02                                        ; local index
+00001d6: 2d                                        ; i32.load8_u
+00001d7: 00                                        ; alignment
+00001d8: b01d                                      ; load offset
+00001da: 6a                                        ; i32.add
+00001db: 3a                                        ; i32.store8
+00001dc: 00                                        ; alignment
+00001dd: b01d                                      ; store offset
+00001df: 20                                        ; get_local
+00001e0: 00                                        ; local index
+00001e1: 10                                        ; call
+00001e2: 00                                        ; function index
+00001e3: 0b                                        ; end
+00001bf: 24                                        ; FIXUP func body size
 ; function body 12
-00001e5: 00                                        ; func body size (guess)
-00001e6: 00                                        ; local decl count
-00001e7: 20                                        ; get_local
-00001e8: 01                                        ; local index
-00001e9: 0b                                        ; end
-00001e5: 04                                        ; FIXUP func body size
-; function body 13
-00001ea: 00                                        ; func body size (guess)
-00001eb: 00                                        ; local decl count
-00001ec: 20                                        ; get_local
-00001ed: 00                                        ; local index
-00001ee: 20                                        ; get_local
-00001ef: 01                                        ; local index
-00001f0: 72                                        ; i32.or
-00001f1: 0b                                        ; end
-00001ea: 07                                        ; FIXUP func body size
-; function body 14
-00001f2: 00                                        ; func body size (guess)
-00001f3: 00                                        ; local decl count
-00001f4: 20                                        ; get_local
-00001f5: 00                                        ; local index
-00001f6: 20                                        ; get_local
-00001f7: 01                                        ; local index
-00001f8: 71                                        ; i32.and
-00001f9: 0b                                        ; end
-00001f2: 07                                        ; FIXUP func body size
-; function body 15
-00001fa: 00                                        ; func body size (guess)
-00001fb: 00                                        ; local decl count
-00001fc: 20                                        ; get_local
-00001fd: 00                                        ; local index
-00001fe: 20                                        ; get_local
-00001ff: 01                                        ; local index
-0000200: 73                                        ; i32.xor
-0000201: 0b                                        ; end
-00001fa: 07                                        ; FIXUP func body size
-; function body 16
-0000202: 00                                        ; func body size (guess)
-0000203: 01                                        ; local decl count
-0000204: 01                                        ; local type count
-0000205: 7f                                        ; i32
-0000206: 20                                        ; get_local
-0000207: 00                                        ; local index
+00001e4: 00                                        ; func body size (guess)
+00001e5: 01                                        ; local decl count
+00001e6: 01                                        ; local type count
+00001e7: 7f                                        ; i32
+00001e8: 20                                        ; get_local
+00001e9: 01                                        ; local index
+00001ea: 41                                        ; i32.const
+00001eb: 801e                                      ; i32 literal
+00001ed: 71                                        ; i32.and
+00001ee: 41                                        ; i32.const
+00001ef: 08                                        ; i32 literal
+00001f0: 76                                        ; i32.shr_u
+00001f1: 22                                        ; tee_local
+00001f2: 02                                        ; local index
+00001f3: 20                                        ; get_local
+00001f4: 02                                        ; local index
+00001f5: 2d                                        ; i32.load8_u
+00001f6: 00                                        ; alignment
+00001f7: b01d                                      ; load offset
+00001f9: 20                                        ; get_local
+00001fa: 01                                        ; local index
+00001fb: 41                                        ; i32.const
+00001fc: f001                                      ; i32 literal
+00001fe: 71                                        ; i32.and
+00001ff: 41                                        ; i32.const
+0000200: 04                                        ; i32 literal
+0000201: 76                                        ; i32.shr_u
+0000202: 2d                                        ; i32.load8_u
+0000203: 00                                        ; alignment
+0000204: b01d                                      ; load offset
+0000206: 41                                        ; i32.const
+0000207: 10                                        ; i32 literal
 0000208: 20                                        ; get_local
 0000209: 01                                        ; local index
-000020a: 6a                                        ; i32.add
-000020b: 22                                        ; tee_local
-000020c: 02                                        ; local index
-000020d: 41                                        ; i32.const
-000020e: bf1d                                      ; i32 literal
-0000210: 41                                        ; i32.const
-0000211: 8002                                      ; i32 literal
-0000213: 20                                        ; get_local
-0000214: 02                                        ; local index
-0000215: 71                                        ; i32.and
-0000216: 41                                        ; i32.const
-0000217: 08                                        ; i32 literal
-0000218: 76                                        ; i32.shr_u
-0000219: 36                                        ; i32.store
-000021a: 02                                        ; alignment
-000021b: 00                                        ; store offset
-000021c: 0b                                        ; end
-0000202: 1a                                        ; FIXUP func body size
-; function body 17
-000021d: 00                                        ; func body size (guess)
-000021e: 01                                        ; local decl count
-000021f: 01                                        ; local type count
-0000220: 7f                                        ; i32
+000020a: 41                                        ; i32.const
+000020b: 0f                                        ; i32 literal
+000020c: 71                                        ; i32.and
+000020d: 6a                                        ; i32.add
+000020e: 11                                        ; call_indirect
+000020f: 00                                        ; signature index
+0000210: 00                                        ; call_indirect reserved
+0000211: 3a                                        ; i32.store8
+0000212: 00                                        ; alignment
+0000213: b01d                                      ; store offset
+0000215: 20                                        ; get_local
+0000216: 00                                        ; local index
+0000217: 10                                        ; call
+0000218: 00                                        ; function index
+0000219: 0b                                        ; end
+00001e4: 35                                        ; FIXUP func body size
+; function body 13
+000021a: 00                                        ; func body size (guess)
+000021b: 00                                        ; local decl count
+000021c: 20                                        ; get_local
+000021d: 01                                        ; local index
+000021e: 0b                                        ; end
+000021a: 04                                        ; FIXUP func body size
+; function body 14
+000021f: 00                                        ; func body size (guess)
+0000220: 00                                        ; local decl count
 0000221: 20                                        ; get_local
 0000222: 00                                        ; local index
 0000223: 20                                        ; get_local
 0000224: 01                                        ; local index
-0000225: 4b                                        ; i32.gt_u
-0000226: 04                                        ; if
-0000227: 7f                                        ; i32
-0000228: 20                                        ; get_local
-0000229: 00                                        ; local index
-000022a: 20                                        ; get_local
-000022b: 01                                        ; local index
-000022c: 6b                                        ; i32.sub
-000022d: 41                                        ; i32.const
-000022e: bf1d                                      ; i32 literal
-0000230: 41                                        ; i32.const
-0000231: 00                                        ; i32 literal
-0000232: 36                                        ; i32.store
-0000233: 02                                        ; alignment
-0000234: 00                                        ; store offset
-0000235: 05                                        ; else
-0000236: 20                                        ; get_local
-0000237: 01                                        ; local index
-0000238: 20                                        ; get_local
-0000239: 00                                        ; local index
-000023a: 6b                                        ; i32.sub
-000023b: 41                                        ; i32.const
-000023c: bf1d                                      ; i32 literal
-000023e: 41                                        ; i32.const
-000023f: 01                                        ; i32 literal
-0000240: 36                                        ; i32.store
-0000241: 02                                        ; alignment
-0000242: 00                                        ; store offset
-0000243: 0b                                        ; end
-0000244: 0b                                        ; end
-000021d: 27                                        ; FIXUP func body size
-; function body 18
-0000245: 00                                        ; func body size (guess)
-0000246: 01                                        ; local decl count
-0000247: 01                                        ; local type count
-0000248: 7f                                        ; i32
-0000249: 20                                        ; get_local
-000024a: 01                                        ; local index
+0000225: 72                                        ; i32.or
+0000226: 0b                                        ; end
+000021f: 07                                        ; FIXUP func body size
+; function body 15
+0000227: 00                                        ; func body size (guess)
+0000228: 00                                        ; local decl count
+0000229: 20                                        ; get_local
+000022a: 00                                        ; local index
+000022b: 20                                        ; get_local
+000022c: 01                                        ; local index
+000022d: 71                                        ; i32.and
+000022e: 0b                                        ; end
+0000227: 07                                        ; FIXUP func body size
+; function body 16
+000022f: 00                                        ; func body size (guess)
+0000230: 00                                        ; local decl count
+0000231: 20                                        ; get_local
+0000232: 00                                        ; local index
+0000233: 20                                        ; get_local
+0000234: 01                                        ; local index
+0000235: 73                                        ; i32.xor
+0000236: 0b                                        ; end
+000022f: 07                                        ; FIXUP func body size
+; function body 17
+0000237: 00                                        ; func body size (guess)
+0000238: 01                                        ; local decl count
+0000239: 01                                        ; local type count
+000023a: 7f                                        ; i32
+000023b: 20                                        ; get_local
+000023c: 00                                        ; local index
+000023d: 20                                        ; get_local
+000023e: 01                                        ; local index
+000023f: 6a                                        ; i32.add
+0000240: 22                                        ; tee_local
+0000241: 02                                        ; local index
+0000242: 41                                        ; i32.const
+0000243: bf1d                                      ; i32 literal
+0000245: 41                                        ; i32.const
+0000246: 8002                                      ; i32 literal
+0000248: 20                                        ; get_local
+0000249: 02                                        ; local index
+000024a: 71                                        ; i32.and
 000024b: 41                                        ; i32.const
-000024c: 01                                        ; i32 literal
+000024c: 08                                        ; i32 literal
 000024d: 76                                        ; i32.shr_u
-000024e: 41                                        ; i32.const
-000024f: bf1d                                      ; i32 literal
-0000251: 41                                        ; i32.const
-0000252: 01                                        ; i32 literal
-0000253: 20                                        ; get_local
-0000254: 01                                        ; local index
-0000255: 71                                        ; i32.and
-0000256: 36                                        ; i32.store
-0000257: 02                                        ; alignment
-0000258: 00                                        ; store offset
-0000259: 0b                                        ; end
-0000245: 14                                        ; FIXUP func body size
+000024e: 36                                        ; i32.store
+000024f: 02                                        ; alignment
+0000250: 00                                        ; store offset
+0000251: 0b                                        ; end
+0000237: 1a                                        ; FIXUP func body size
+; function body 18
+0000252: 00                                        ; func body size (guess)
+0000253: 01                                        ; local decl count
+0000254: 01                                        ; local type count
+0000255: 7f                                        ; i32
+0000256: 20                                        ; get_local
+0000257: 00                                        ; local index
+0000258: 20                                        ; get_local
+0000259: 01                                        ; local index
+000025a: 4b                                        ; i32.gt_u
+000025b: 04                                        ; if
+000025c: 7f                                        ; i32
+000025d: 20                                        ; get_local
+000025e: 00                                        ; local index
+000025f: 20                                        ; get_local
+0000260: 01                                        ; local index
+0000261: 6b                                        ; i32.sub
+0000262: 41                                        ; i32.const
+0000263: bf1d                                      ; i32 literal
+0000265: 41                                        ; i32.const
+0000266: 00                                        ; i32 literal
+0000267: 36                                        ; i32.store
+0000268: 02                                        ; alignment
+0000269: 00                                        ; store offset
+000026a: 05                                        ; else
+000026b: 20                                        ; get_local
+000026c: 01                                        ; local index
+000026d: 20                                        ; get_local
+000026e: 00                                        ; local index
+000026f: 6b                                        ; i32.sub
+0000270: 41                                        ; i32.const
+0000271: bf1d                                      ; i32 literal
+0000273: 41                                        ; i32.const
+0000274: 01                                        ; i32 literal
+0000275: 36                                        ; i32.store
+0000276: 02                                        ; alignment
+0000277: 00                                        ; store offset
+0000278: 0b                                        ; end
+0000279: 0b                                        ; end
+0000252: 27                                        ; FIXUP func body size
 ; function body 19
-000025a: 00                                        ; func body size (guess)
-000025b: 01                                        ; local decl count
-000025c: 01                                        ; local type count
-000025d: 7f                                        ; i32
-000025e: 20                                        ; get_local
-000025f: 01                                        ; local index
-0000260: 20                                        ; get_local
-0000261: 00                                        ; local index
-0000262: 4b                                        ; i32.gt_u
-0000263: 04                                        ; if
-0000264: 7f                                        ; i32
-0000265: 20                                        ; get_local
-0000266: 01                                        ; local index
-0000267: 20                                        ; get_local
-0000268: 00                                        ; local index
-0000269: 6b                                        ; i32.sub
-000026a: 41                                        ; i32.const
-000026b: bf1d                                      ; i32 literal
-000026d: 41                                        ; i32.const
-000026e: 00                                        ; i32 literal
-000026f: 36                                        ; i32.store
-0000270: 02                                        ; alignment
-0000271: 00                                        ; store offset
-0000272: 05                                        ; else
-0000273: 20                                        ; get_local
-0000274: 00                                        ; local index
-0000275: 20                                        ; get_local
-0000276: 01                                        ; local index
-0000277: 6b                                        ; i32.sub
-0000278: 41                                        ; i32.const
-0000279: bf1d                                      ; i32 literal
-000027b: 41                                        ; i32.const
-000027c: 01                                        ; i32 literal
-000027d: 36                                        ; i32.store
-000027e: 02                                        ; alignment
-000027f: 00                                        ; store offset
-0000280: 0b                                        ; end
-0000281: 0b                                        ; end
-000025a: 27                                        ; FIXUP func body size
+000027a: 00                                        ; func body size (guess)
+000027b: 01                                        ; local decl count
+000027c: 01                                        ; local type count
+000027d: 7f                                        ; i32
+000027e: 20                                        ; get_local
+000027f: 01                                        ; local index
+0000280: 41                                        ; i32.const
+0000281: 01                                        ; i32 literal
+0000282: 76                                        ; i32.shr_u
+0000283: 41                                        ; i32.const
+0000284: bf1d                                      ; i32 literal
+0000286: 41                                        ; i32.const
+0000287: 01                                        ; i32 literal
+0000288: 20                                        ; get_local
+0000289: 01                                        ; local index
+000028a: 71                                        ; i32.and
+000028b: 36                                        ; i32.store
+000028c: 02                                        ; alignment
+000028d: 00                                        ; store offset
+000028e: 0b                                        ; end
+000027a: 14                                        ; FIXUP func body size
 ; function body 20
-0000282: 00                                        ; func body size (guess)
-0000283: 01                                        ; local decl count
-0000284: 01                                        ; local type count
-0000285: 7f                                        ; i32
-0000286: 20                                        ; get_local
-0000287: 01                                        ; local index
-0000288: 41                                        ; i32.const
-0000289: 01                                        ; i32 literal
-000028a: 74                                        ; i32.shl
-000028b: 41                                        ; i32.const
-000028c: bf1d                                      ; i32 literal
-000028e: 41                                        ; i32.const
-000028f: 8001                                      ; i32 literal
-0000291: 20                                        ; get_local
-0000292: 01                                        ; local index
-0000293: 71                                        ; i32.and
-0000294: 41                                        ; i32.const
-0000295: 07                                        ; i32 literal
-0000296: 76                                        ; i32.shr_u
-0000297: 36                                        ; i32.store
-0000298: 02                                        ; alignment
-0000299: 00                                        ; store offset
-000029a: 0b                                        ; end
-0000282: 18                                        ; FIXUP func body size
-; function body 21
-000029b: 00                                        ; func body size (guess)
-000029c: 00                                        ; local decl count
-000029d: 20                                        ; get_local
-000029e: 01                                        ; local index
+000028f: 00                                        ; func body size (guess)
+0000290: 01                                        ; local decl count
+0000291: 01                                        ; local type count
+0000292: 7f                                        ; i32
+0000293: 20                                        ; get_local
+0000294: 01                                        ; local index
+0000295: 20                                        ; get_local
+0000296: 00                                        ; local index
+0000297: 4b                                        ; i32.gt_u
+0000298: 04                                        ; if
+0000299: 7f                                        ; i32
+000029a: 20                                        ; get_local
+000029b: 01                                        ; local index
+000029c: 20                                        ; get_local
+000029d: 00                                        ; local index
+000029e: 6b                                        ; i32.sub
 000029f: 41                                        ; i32.const
-00002a0: 801e                                      ; i32 literal
-00002a2: 71                                        ; i32.and
-00002a3: 41                                        ; i32.const
-00002a4: 08                                        ; i32 literal
-00002a5: 76                                        ; i32.shr_u
-00002a6: 2d                                        ; i32.load8_u
-00002a7: 00                                        ; alignment
-00002a8: b01d                                      ; load offset
+00002a0: bf1d                                      ; i32 literal
+00002a2: 41                                        ; i32.const
+00002a3: 00                                        ; i32 literal
+00002a4: 36                                        ; i32.store
+00002a5: 02                                        ; alignment
+00002a6: 00                                        ; store offset
+00002a7: 05                                        ; else
+00002a8: 20                                        ; get_local
+00002a9: 00                                        ; local index
 00002aa: 20                                        ; get_local
 00002ab: 01                                        ; local index
-00002ac: 41                                        ; i32.const
-00002ad: f001                                      ; i32 literal
-00002af: 71                                        ; i32.and
+00002ac: 6b                                        ; i32.sub
+00002ad: 41                                        ; i32.const
+00002ae: bf1d                                      ; i32 literal
 00002b0: 41                                        ; i32.const
-00002b1: 04                                        ; i32 literal
-00002b2: 76                                        ; i32.shr_u
-00002b3: 2d                                        ; i32.load8_u
-00002b4: 00                                        ; alignment
-00002b5: b01d                                      ; load offset
-00002b7: 47                                        ; i32.ne
-00002b8: 04                                        ; if
-00002b9: 40                                        ; void
-00002ba: 20                                        ; get_local
-00002bb: 00                                        ; local index
-00002bc: 10                                        ; call
-00002bd: 00                                        ; function index
-00002be: 21                                        ; set_local
-00002bf: 00                                        ; local index
-00002c0: 0b                                        ; end
-00002c1: 20                                        ; get_local
-00002c2: 00                                        ; local index
-00002c3: 10                                        ; call
-00002c4: 00                                        ; function index
-00002c5: 0b                                        ; end
-000029b: 2a                                        ; FIXUP func body size
+00002b1: 01                                        ; i32 literal
+00002b2: 36                                        ; i32.store
+00002b3: 02                                        ; alignment
+00002b4: 00                                        ; store offset
+00002b5: 0b                                        ; end
+00002b6: 0b                                        ; end
+000028f: 27                                        ; FIXUP func body size
+; function body 21
+00002b7: 00                                        ; func body size (guess)
+00002b8: 01                                        ; local decl count
+00002b9: 01                                        ; local type count
+00002ba: 7f                                        ; i32
+00002bb: 20                                        ; get_local
+00002bc: 01                                        ; local index
+00002bd: 41                                        ; i32.const
+00002be: 01                                        ; i32 literal
+00002bf: 74                                        ; i32.shl
+00002c0: 41                                        ; i32.const
+00002c1: bf1d                                      ; i32 literal
+00002c3: 41                                        ; i32.const
+00002c4: 8001                                      ; i32 literal
+00002c6: 20                                        ; get_local
+00002c7: 01                                        ; local index
+00002c8: 71                                        ; i32.and
+00002c9: 41                                        ; i32.const
+00002ca: 07                                        ; i32 literal
+00002cb: 76                                        ; i32.shr_u
+00002cc: 36                                        ; i32.store
+00002cd: 02                                        ; alignment
+00002ce: 00                                        ; store offset
+00002cf: 0b                                        ; end
+00002b7: 18                                        ; FIXUP func body size
 ; function body 22
-00002c6: 00                                        ; func body size (guess)
-00002c7: 00                                        ; local decl count
-00002c8: 41                                        ; i32.const
-00002c9: b01d                                      ; i32 literal
-00002cb: 2f                                        ; i32.load16_u
-00002cc: 01                                        ; alignment
-00002cd: 00                                        ; load offset
-00002ce: 41                                        ; i32.const
-00002cf: ff1f                                      ; i32 literal
-00002d1: 20                                        ; get_local
-00002d2: 01                                        ; local index
-00002d3: 71                                        ; i32.and
-00002d4: 6a                                        ; i32.add
-00002d5: 0b                                        ; end
-00002c6: 0f                                        ; FIXUP func body size
+00002d0: 00                                        ; func body size (guess)
+00002d1: 00                                        ; local decl count
+00002d2: 20                                        ; get_local
+00002d3: 01                                        ; local index
+00002d4: 41                                        ; i32.const
+00002d5: 801e                                      ; i32 literal
+00002d7: 71                                        ; i32.and
+00002d8: 41                                        ; i32.const
+00002d9: 08                                        ; i32 literal
+00002da: 76                                        ; i32.shr_u
+00002db: 2d                                        ; i32.load8_u
+00002dc: 00                                        ; alignment
+00002dd: b01d                                      ; load offset
+00002df: 20                                        ; get_local
+00002e0: 01                                        ; local index
+00002e1: 41                                        ; i32.const
+00002e2: f001                                      ; i32 literal
+00002e4: 71                                        ; i32.and
+00002e5: 41                                        ; i32.const
+00002e6: 04                                        ; i32 literal
+00002e7: 76                                        ; i32.shr_u
+00002e8: 2d                                        ; i32.load8_u
+00002e9: 00                                        ; alignment
+00002ea: b01d                                      ; load offset
+00002ec: 47                                        ; i32.ne
+00002ed: 04                                        ; if
+00002ee: 40                                        ; void
+00002ef: 20                                        ; get_local
+00002f0: 00                                        ; local index
+00002f1: 10                                        ; call
+00002f2: 00                                        ; function index
+00002f3: 21                                        ; set_local
+00002f4: 00                                        ; local index
+00002f5: 0b                                        ; end
+00002f6: 20                                        ; get_local
+00002f7: 00                                        ; local index
+00002f8: 10                                        ; call
+00002f9: 00                                        ; function index
+00002fa: 0b                                        ; end
+00002d0: 2a                                        ; FIXUP func body size
 ; function body 23
-00002d6: 00                                        ; func body size (guess)
-00002d7: 01                                        ; local decl count
-00002d8: 02                                        ; local type count
-00002d9: 7f                                        ; i32
-00002da: 41                                        ; i32.const
-00002db: a01d                                      ; i32 literal
-00002dd: 41                                        ; i32.const
-00002de: a01d                                      ; i32 literal
-00002e0: 2f                                        ; i32.load16_u
-00002e1: 01                                        ; alignment
-00002e2: 00                                        ; load offset
-00002e3: 22                                        ; tee_local
-00002e4: 00                                        ; local index
-00002e5: 20                                        ; get_local
-00002e6: 00                                        ; local index
-00002e7: 2f                                        ; i32.load16_u
-00002e8: 01                                        ; alignment
-00002e9: 00                                        ; load offset
-00002ea: 22                                        ; tee_local
-00002eb: 01                                        ; local index
-00002ec: 20                                        ; get_local
-00002ed: 01                                        ; local index
-00002ee: 41                                        ; i32.const
-00002ef: 80e0 03                                   ; i32 literal
-00002f2: 71                                        ; i32.and
-00002f3: 41                                        ; i32.const
-00002f4: 0c                                        ; i32 literal
-00002f5: 76                                        ; i32.shr_u
-00002f6: 11                                        ; call_indirect
-00002f7: 00                                        ; signature index
-00002f8: 00                                        ; call_indirect reserved
-00002f9: 3b                                        ; i32.store16
-00002fa: 01                                        ; alignment
-00002fb: 00                                        ; store offset
-00002fc: 0b                                        ; end
-00002d6: 26                                        ; FIXUP func body size
-; move data: [7a, 2fd) -> [7b, 2fe)
-0000079: 8305                                      ; FIXUP section size
+00002fb: 00                                        ; func body size (guess)
+00002fc: 00                                        ; local decl count
+00002fd: 41                                        ; i32.const
+00002fe: a21d                                      ; i32 literal
+0000300: 41                                        ; i32.const
+0000301: ff1f                                      ; i32 literal
+0000303: 20                                        ; get_local
+0000304: 01                                        ; local index
+0000305: 71                                        ; i32.and
+0000306: 3b                                        ; i32.store16
+0000307: 01                                        ; alignment
+0000308: 00                                        ; store offset
+0000309: 20                                        ; get_local
+000030a: 00                                        ; local index
+000030b: 10                                        ; call
+000030c: 00                                        ; function index
+000030d: 0b                                        ; end
+00002fb: 12                                        ; FIXUP func body size
+; function body 24
+000030e: 00                                        ; func body size (guess)
+000030f: 00                                        ; local decl count
+0000310: 41                                        ; i32.const
+0000311: b01d                                      ; i32 literal
+0000313: 2f                                        ; i32.load16_u
+0000314: 01                                        ; alignment
+0000315: 00                                        ; load offset
+0000316: 41                                        ; i32.const
+0000317: ff1f                                      ; i32 literal
+0000319: 20                                        ; get_local
+000031a: 01                                        ; local index
+000031b: 71                                        ; i32.and
+000031c: 6a                                        ; i32.add
+000031d: 0b                                        ; end
+000030e: 0f                                        ; FIXUP func body size
+; function body 25
+000031e: 00                                        ; func body size (guess)
+000031f: 01                                        ; local decl count
+0000320: 02                                        ; local type count
+0000321: 7f                                        ; i32
+0000322: 20                                        ; get_local
+0000323: 01                                        ; local index
+0000324: 41                                        ; i32.const
+0000325: 801e                                      ; i32 literal
+0000327: 71                                        ; i32.and
+0000328: 41                                        ; i32.const
+0000329: 08                                        ; i32 literal
+000032a: 76                                        ; i32.shr_u
+000032b: 21                                        ; set_local
+000032c: 02                                        ; local index
+000032d: 20                                        ; get_local
+000032e: 01                                        ; local index
+000032f: 41                                        ; i32.const
+0000330: ff01                                      ; i32 literal
+0000332: 71                                        ; i32.and
+0000333: 21                                        ; set_local
+0000334: 03                                        ; local index
+0000335: 20                                        ; get_local
+0000336: 03                                        ; local index
+0000337: 41                                        ; i32.const
+0000338: 1e                                        ; i32 literal
+0000339: 46                                        ; i32.eq
+000033a: 04                                        ; if
+000033b: 40                                        ; void
+000033c: 20                                        ; get_local
+000033d: 02                                        ; local index
+000033e: 10                                        ; call
+000033f: 1a                                        ; function index
+0000340: 0b                                        ; end
+0000341: 20                                        ; get_local
+0000342: 03                                        ; local index
+0000343: 41                                        ; i32.const
+0000344: 29                                        ; i32 literal
+0000345: 46                                        ; i32.eq
+0000346: 04                                        ; if
+0000347: 40                                        ; void
+0000348: 20                                        ; get_local
+0000349: 02                                        ; local index
+000034a: 10                                        ; call
+000034b: 1b                                        ; function index
+000034c: 0b                                        ; end
+000034d: 20                                        ; get_local
+000034e: 03                                        ; local index
+000034f: 41                                        ; i32.const
+0000350: d500                                      ; i32 literal
+0000352: 46                                        ; i32.eq
+0000353: 04                                        ; if
+0000354: 40                                        ; void
+0000355: 20                                        ; get_local
+0000356: 02                                        ; local index
+0000357: 10                                        ; call
+0000358: 1c                                        ; function index
+0000359: 0b                                        ; end
+000035a: 20                                        ; get_local
+000035b: 03                                        ; local index
+000035c: 41                                        ; i32.const
+000035d: e500                                      ; i32 literal
+000035f: 46                                        ; i32.eq
+0000360: 04                                        ; if
+0000361: 40                                        ; void
+0000362: 20                                        ; get_local
+0000363: 02                                        ; local index
+0000364: 10                                        ; call
+0000365: 1d                                        ; function index
+0000366: 0b                                        ; end
+0000367: 20                                        ; get_local
+0000368: 00                                        ; local index
+0000369: 10                                        ; call
+000036a: 00                                        ; function index
+000036b: 0b                                        ; end
+000031e: 4d                                        ; FIXUP func body size
+; function body 26
+000036c: 00                                        ; func body size (guess)
+000036d: 00                                        ; local decl count
+000036e: 41                                        ; i32.const
+000036f: a21d                                      ; i32 literal
+0000371: 41                                        ; i32.const
+0000372: a21d                                      ; i32 literal
+0000374: 2f                                        ; i32.load16_u
+0000375: 01                                        ; alignment
+0000376: 00                                        ; load offset
+0000377: 20                                        ; get_local
+0000378: 00                                        ; local index
+0000379: 2d                                        ; i32.load8_u
+000037a: 00                                        ; alignment
+000037b: b01d                                      ; load offset
+000037d: 6a                                        ; i32.add
+000037e: 3b                                        ; i32.store16
+000037f: 01                                        ; alignment
+0000380: 00                                        ; store offset
+0000381: 0b                                        ; end
+000036c: 15                                        ; FIXUP func body size
+; function body 27
+0000382: 00                                        ; func body size (guess)
+0000383: 00                                        ; local decl count
+0000384: 41                                        ; i32.const
+0000385: a21d                                      ; i32 literal
+0000387: 41                                        ; i32.const
+0000388: c01d                                      ; i32 literal
+000038a: 3b                                        ; i32.store16
+000038b: 01                                        ; alignment
+000038c: 00                                        ; store offset
+000038d: 0b                                        ; end
+0000382: 0b                                        ; FIXUP func body size
+; function body 28
+000038e: 00                                        ; func body size (guess)
+000038f: 00                                        ; local decl count
+0000390: 41                                        ; i32.const
+0000391: b01d                                      ; i32 literal
+0000393: 41                                        ; i32.const
+0000394: a21d                                      ; i32 literal
+0000396: 2f                                        ; i32.load16_u
+0000397: 01                                        ; alignment
+0000398: 00                                        ; load offset
+0000399: 20                                        ; get_local
+000039a: 00                                        ; local index
+000039b: 10                                        ; call
+000039c: 01                                        ; function index
+000039d: 0b                                        ; end
+000038e: 0f                                        ; FIXUP func body size
+; function body 29
+000039e: 00                                        ; func body size (guess)
+000039f: 00                                        ; local decl count
+00003a0: 41                                        ; i32.const
+00003a1: a21d                                      ; i32 literal
+00003a3: 2f                                        ; i32.load16_u
+00003a4: 01                                        ; alignment
+00003a5: 00                                        ; load offset
+00003a6: 41                                        ; i32.const
+00003a7: b01d                                      ; i32 literal
+00003a9: 20                                        ; get_local
+00003aa: 00                                        ; local index
+00003ab: 10                                        ; call
+00003ac: 01                                        ; function index
+00003ad: 0b                                        ; end
+000039e: 0f                                        ; FIXUP func body size
+; function body 30
+00003ae: 00                                        ; func body size (guess)
+00003af: 01                                        ; local decl count
+00003b0: 02                                        ; local type count
+00003b1: 7f                                        ; i32
+00003b2: 41                                        ; i32.const
+00003b3: a01d                                      ; i32 literal
+00003b5: 41                                        ; i32.const
+00003b6: a01d                                      ; i32 literal
+00003b8: 2f                                        ; i32.load16_u
+00003b9: 01                                        ; alignment
+00003ba: 00                                        ; load offset
+00003bb: 22                                        ; tee_local
+00003bc: 00                                        ; local index
+00003bd: 20                                        ; get_local
+00003be: 00                                        ; local index
+00003bf: 2f                                        ; i32.load16_u
+00003c0: 01                                        ; alignment
+00003c1: 00                                        ; load offset
+00003c2: 22                                        ; tee_local
+00003c3: 01                                        ; local index
+00003c4: 20                                        ; get_local
+00003c5: 01                                        ; local index
+00003c6: 41                                        ; i32.const
+00003c7: 80e0 03                                   ; i32 literal
+00003ca: 71                                        ; i32.and
+00003cb: 41                                        ; i32.const
+00003cc: 0c                                        ; i32 literal
+00003cd: 76                                        ; i32.shr_u
+00003ce: 11                                        ; call_indirect
+00003cf: 00                                        ; signature index
+00003d0: 00                                        ; call_indirect reserved
+00003d1: 3b                                        ; i32.store16
+00003d2: 01                                        ; alignment
+00003d3: 00                                        ; store offset
+00003d4: 0b                                        ; end
+00003ae: 26                                        ; FIXUP func body size
+; move data: [8b, 3d5) -> [8c, 3d6)
+000008a: ca06                                      ; FIXUP section size

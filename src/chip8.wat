@@ -7,6 +7,33 @@
       (get_local $value)
     )
   )
+  (func $move_memory (param $from i32) (param $to i32) (param $repeat i32) (local $i i32)
+    (loop $loop
+      (i32.store8
+        (i32.add
+          (get_local $to)
+          (get_local $i)
+        )
+        (i32.load8_u
+          (i32.add
+            (get_local $from)
+            (get_local $i)
+          )
+        )
+      )
+      (br_if $loop
+        (i32.eq
+          (tee_local $i
+            (i32.add
+              (get_local $i)
+              (i32.const 1)
+            )
+          )
+          (get_local $repeat)
+        )
+      )
+    )
+  )
   (func $NOOP (param $pc i32) (param $op i32) (result i32)
     (call $incrementAddress
       (get_local $pc)
@@ -235,7 +262,7 @@
     )
   )
   ;; Bitwise dispatch
-  (func $8XYZ (param $pc i32) (param $op i32) (result i32) (local $vx i32)
+  (func $8XY$ (param $pc i32) (param $op i32) (result i32) (local $vx i32)
     (i32.store8 offset=0xeb0
       (tee_local $vx
         (i32.shr_u
@@ -440,6 +467,19 @@
       (get_local $pc)
     )
   )
+  ;; Sets I to the address NNN
+  (func $ANNN (param $pc i32) (param $op i32) (result i32)
+    (i32.store16
+      (i32.const 0x0ea2)
+      (i32.and
+        (i32.const 0x0fff)
+        (get_local $op)
+      )
+    )
+    (call $incrementAddress
+      (get_local $pc)
+    )
+  )
   ;; Jump to V0 + NNN
   (func $BNNN (param $pc i32) (param $op i32) (result i32)
     (i32.add
@@ -452,6 +492,109 @@
       )
     )
   )
+  ;; Mem/misc. dispatch
+  (func $FX$$ (param $pc i32) (param $op i32) (result i32) (local $x i32) (local $subop i32)
+    (set_local $x
+      (i32.shr_u
+        (i32.and
+          (get_local $op)
+          (i32.const 0x0f00)
+        )
+        (i32.const 8)
+      )
+    )
+    (set_local $subop
+      (i32.and
+        (get_local $op)
+        (i32.const 0xff)
+      )
+    )
+    (if
+      (i32.eq
+        (get_local $subop)
+        (i32.const 0x1e)
+      )
+      (then
+        (call $FX1E
+          (get_local $x)
+        ))
+    )
+    (if
+      (i32.eq
+        (get_local $subop)
+        (i32.const 0x29)
+      )
+      (then
+        (call $FX29
+          (get_local $x)
+        ))
+    )
+    (if
+      (i32.eq
+        (get_local $subop)
+        (i32.const 0x55)
+      )
+      (then
+        (call $FX55
+          (get_local $x)
+        ))
+    )
+    (if
+      (i32.eq
+        (get_local $subop)
+        (i32.const 0x65)
+      )
+      (then
+        (call $FX65
+          (get_local $x)
+        ))
+    )
+    (call $incrementAddress
+      (get_local $pc)
+    )
+  )
+  ;; Adds VX to I
+  (func $FX1E (param $x i32)
+    (i32.store16
+      (i32.const 0x0ea2)
+      (i32.add
+        (i32.load16_u
+          (i32.const 0x0ea2)
+        )
+        (i32.load8_u offset=0xeb0
+          (get_local $x)
+        )
+      )
+    )
+  )
+  ;; TODO: find space for these sprites!
+  ;; Sets I to the location of the sprite for the character in VX. Characters 0-F (in hexadecimal) are represented by a 4x5 font.
+  (func $FX29 (param $x i32)
+    (i32.store16
+      (i32.const 0x0ea2)
+      (i32.const 0x0ec0)
+    )
+  )
+  ;; Stores V0 to VX (including VX) in memory starting at address I (increased by X)
+  (func $FX55 (param $x i32)
+    (call $move_memory
+      (i32.const 0x0eb0)
+      (i32.load16_u
+        (i32.const 0x0ea2)
+      )
+      (get_local $x)
+    )
+  )
+  ;; Fills V0 to VX (including VX) with values from memory starting at address I (increased by X)
+  (func $FX65 (param $x i32)
+    (call $move_memory
+      (i32.load16_u
+        (i32.const 0x0ea2)
+      )
+      (i32.const 0x0eb0)
+      (get_local $x)
+    )
+  )
   (table anyfunc
     (elem
       $0NNN
@@ -462,14 +605,14 @@
       $5XY0
       $6XNN
       $7XNN
-      $8XYZ
+      $8XY$
       $9XY0
-      $NOOP
+      $ANNN
       $BNNN
       $NOOP
       $NOOP
       $NOOP
-      $NOOP
+      $FX$$
       ;; bitwise operations
       $8XY0
       $8XY1

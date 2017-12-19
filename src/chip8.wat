@@ -272,8 +272,138 @@
       (get_local $pc)
     )
   )
+  ;; Set vX to the value of vY.
   (func $8XY0 (param $vx i32) (param $vy i32) (result i32)
-    i32.const 4
+    get_local $vy
+  )
+  ;; Set vX to vX or vY.
+  (func $8XY1 (param $vx i32) (param $vy i32) (result i32)
+    (i32.or
+      (get_local $vx)
+      (get_local $vy)
+    )
+  )
+  ;; Set vX to vX and vY.
+  (func $8XY2 (param $vx i32) (param $vy i32) (result i32)
+    (i32.and
+      (get_local $vx)
+      (get_local $vy)
+    )
+  )
+  ;; Set vX to vX xor vY.
+  (func $8XY3 (param $vx i32) (param $vy i32) (result i32)
+    (i32.xor
+      (get_local $vx)
+      (get_local $vy)
+    )
+  )
+  ;; Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.
+  (func $8XY4 (param $vx i32) (param $vy i32) (result i32) (local $result i32)
+    (tee_local $result
+      (i32.add
+        (get_local $vx)
+        (get_local $vy)
+      )
+    )
+    (i32.store
+      (i32.const 0x0ebf)
+      (i32.shr_u
+        (i32.and
+          (i32.const 0x0100)
+          (get_local $result)
+        )
+        (i32.const 8)
+      )
+    )
+  )
+  ;; VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.
+  (func $8XY5 (param $vx i32) (param $vy i32) (result i32) (local $result i32)
+    (if (result i32)
+      (i32.gt_u
+        (get_local $vx)
+        (get_local $vy)
+      )
+      (then
+        (i32.sub
+          (get_local $vx)
+          (get_local $vy)
+        )
+        (i32.store
+          (i32.const 0x0ebf)
+          (i32.const 0x0)
+        )
+      )
+      (else
+        (i32.sub
+          (get_local $vy)
+          (get_local $vx)
+        )
+        (i32.store
+          (i32.const 0x0ebf)
+          (i32.const 0x1)
+        )
+      )
+    )
+  )
+  ;; Shifts VY right by one and copies the result to VX. VF is set to the value of the least significant bit of VY before the shift.
+  (func $8XY6 (param $vx i32) (param $vy i32) (result i32) (local $result i32)
+    (i32.shr_u
+      (get_local $vy)
+      (i32.const 1)
+    )
+    (i32.store
+      (i32.const 0x0ebf)
+      (i32.and
+        (i32.const 0x01)
+        (get_local $vy)
+      )
+    )
+  )
+  ;; VX is subtracted from VY. VF is set to 0 when there's a borrow, and 1 when there isn't.
+  (func $8XY7 (param $vx i32) (param $vy i32) (result i32) (local $result i32)
+    (if (result i32)
+      (i32.gt_u
+        (get_local $vy)
+        (get_local $vx)
+      )
+      (then
+        (i32.sub
+          (get_local $vy)
+          (get_local $vx)
+        )
+        (i32.store
+          (i32.const 0x0ebf)
+          (i32.const 0x0)
+        )
+      )
+      (else
+        (i32.sub
+          (get_local $vx)
+          (get_local $vy)
+        )
+        (i32.store
+          (i32.const 0x0ebf)
+          (i32.const 0x1)
+        )
+      )
+    )
+  )
+  ;; Shifts VY left by one and copies the result to VX. VF is set to the value of the most significant bit of VY before the shift
+  (func $8XYE (param $vx i32) (param $vy i32) (result i32) (local $result i32)
+    (i32.shl
+      (get_local $vy)
+      (i32.const 1)
+    )
+    (i32.store
+      (i32.const 0x0ebf)
+      (i32.shr_u
+        (i32.and
+          (i32.const 0x80)
+          (get_local $vy)
+        )
+        (i32.const 7)
+      )
+    )
   )
   ;; Skip the next instruction if vX does not equal vY
   (func $9XY0 (param $pc i32) (param $op i32) (result i32)
@@ -342,6 +472,20 @@
       $NOOP
       ;; bitwise operations
       $8XY0
+      $8XY1
+      $8XY2
+      $8XY3
+      $8XY4
+      $8XY5
+      $8XY6
+      $8XY7
+      $NOOP
+      $NOOP
+      $NOOP
+      $NOOP
+      $NOOP
+      $NOOP
+      $8XYE
     )
   )
   (func (export "tick") (local $pc i32) (local $op i32)

@@ -1,4 +1,5 @@
-const { init, clear, array, readUInt16, writeUInt16 } = require('./index');
+const { init, clear, read, write } = require('./index');
+const descriptors = require('./descriptors');
 
 let wasmInstance = null;
 
@@ -8,43 +9,43 @@ beforeAll(async () => {
 beforeEach(clear);
 
 test('sets I to address NNN', () => {
-  writeUInt16(0, 0xab0b);
+  write(descriptors.PROGRAM, 0, 0xab0b);
   wasmInstance.exports.tick();
-  expect(readUInt16(0xea2)).toEqual(0xb0b);
+  expect(read(descriptors.I, 0)).toEqual(0xb0b);
 });
 
 test('adds VX to I', () => {
-  writeUInt16(0, 0xf01e);
-  writeUInt16(0xea2, 0x1101);
-  array[0xeb0] = 0xff;
+  write(descriptors.PROGRAM, 0, 0xf01e);
+  write(descriptors.I, 0, 0x1101);
+  write(descriptors.V, 0, 0xff);
   wasmInstance.exports.tick();
-  expect(readUInt16(0xea2)).toEqual(0x1200);
+  expect(read(descriptors.I, 0)).toEqual(0x1200);
 });
 
 // TODO: fixup once I've found enough memory!
 test('sets I to the location of the sprite for the character in VX', () => {
-  writeUInt16(0, 0xf029);
-  array[0xeb0] = 0x0f;
+  write(descriptors.PROGRAM, 0, 0xf029);
+  write(descriptors.V, 0, 0x0f);
   wasmInstance.exports.tick();
-  expect(readUInt16(0xea2)).toEqual(0x0ec0);
+  expect(read(descriptors.I, 0)).toEqual(0x0ec0);
 });
 
 test('stores V0 to VX (inclusive) in memory starting at I (increased by X)', () => {
-  writeUInt16(0, 0xf155);
-  writeUInt16(0xea2, 0x0010);
-  array[0xeb0] = 0xf0;
-  array[0xeb1] = 0x0f;
+  write(descriptors.PROGRAM, 0, 0xf155);
+  write(descriptors.I, 0, 0x0010);
+  write(descriptors.V, 0, 0xf0);
+  write(descriptors.V, 1, 0x0f);
   wasmInstance.exports.tick();
-  expect(array[0x010]).toEqual(0xf0);
-  expect(array[0x011]).toEqual(0x0f);
+  expect(read(descriptors.DATA, 0x10)).toEqual(0xf0);
+  expect(read(descriptors.DATA, 0x11)).toEqual(0x0f);
 });
 
 test('fills V0 to VX (inclusive) from memory starting at I (increased by X)', () => {
-  writeUInt16(0, 0xf165);
-  writeUInt16(0xea2, 0x0010);
-  array[0x010] = 0xf0;
-  array[0x011] = 0x0f;
+  write(descriptors.PROGRAM, 0, 0xf165);
+  write(descriptors.I, 0, 0x0010);
+  write(descriptors.DATA, 0x010, 0xf0);
+  write(descriptors.DATA, 0x011, 0x0f);
   wasmInstance.exports.tick();
-  expect(array[0xeb0]).toEqual(0xf0);
-  expect(array[0xeb1]).toEqual(0x0f);
+  expect(read(descriptors.V, 0)).toEqual(0xf0);
+  expect(read(descriptors.V, 1)).toEqual(0x0f);
 });

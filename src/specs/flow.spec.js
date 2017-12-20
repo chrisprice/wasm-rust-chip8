@@ -15,10 +15,7 @@ test('program counter increments on noop', () => {
 
 test('jumps to address NNN', () => {
   write(descriptors.PROGRAM, 0, 0x1b0b);
-  // array[0x000] = 0x12;
-  // array[0x001] = 0x0a;
   wasmInstance.exports.tick();
-  // console.log(array[0xea0].toString(16), array[0xea1].toString(16));
   expect(read(descriptors.PC, 0)).toEqual(0xb0b);
 });
 

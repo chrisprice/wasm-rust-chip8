@@ -19,7 +19,7 @@ const read = (descriptor, index) => {
   const bytes = descriptor.bits / 8;
   const offset = descriptor.offset + index * bytes;
   let value = 0;
-  for (let i = bytes - 1; i >= 0; i--) {
+  for (let i = 0; i < bytes; i++) {
     value = (value << 8) | array[offset + i];
   }
   return value;
@@ -34,7 +34,7 @@ const write = (descriptor, index, value) => {
   }
   const bytes = descriptor.bits / 8;
   const offset = descriptor.offset + index * bytes;
-  for (let i = 0; i < bytes; i++) {
+  for (let i = bytes - 1; i >= 0; i--) {
     array[offset + i] = value & 0xff;
     value = value >> 8;
   }

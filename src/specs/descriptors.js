@@ -41,9 +41,9 @@ module.exports = {
     count: 16
   },
   SPRITE: {
-    bits: 40,
-    offset: 0xeb4,
-    count: 1
+    bits: 8,
+    offset: 0xec0,
+    count: 5
   },
   SP: {
     bits: 8,
@@ -54,5 +54,10 @@ module.exports = {
     bits: 16,
     offset: 0xed0,
     count: 16
+  },
+  VIDEO: {
+    bits: 8,
+    offset: 0xf00,
+    count: 256
   }
 };

@@ -9,9 +9,9 @@ beforeAll(async () => {
 beforeEach(clear);
 
 test('sets I to address NNN', () => {
-  write(descriptors.PROGRAM, 0, 0xab0b);
+  write(descriptors.PROGRAM, 0, 0xab0a);
   wasmInstance.exports.tick();
-  expect(read(descriptors.I, 0)).toEqual(0xb0b);
+  expect(read(descriptors.I, 0)).toEqual(0xb0a);
 });
 
 test('adds VX to I', () => {

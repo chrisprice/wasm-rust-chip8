@@ -11,7 +11,7 @@ const writeUInt16 = (offset, value) => new Uint16Array(mem.buffer, offset)[0] = 
 
 const read = (descriptor, index) => {
   if (index >= descriptor.count) {
-    throw new Error(`Invalid index $[index}/${descriptor.count}`);
+    throw new Error(`Invalid index ${index}/${descriptor.count}`);
   }
   if (descriptor.bits % 8 !== 0) {
     throw new Error(`No support for non-byte aligned values ${descriptor.bits}`);
@@ -42,7 +42,8 @@ const write = (descriptor, index, value) => {
 };
 
 const init = async () => {
-  const wasmModule = await WebAssembly.compile(fs.readFileSync(`${__dirname}/../chip8.wasm`))
+  const wasmModule = await WebAssembly.compile(fs.readFileSync(`${__dirname}/../chip8.wasm`));
+  array.fill(0);
   return new WebAssembly.Instance(wasmModule, {
     _: {
       mem

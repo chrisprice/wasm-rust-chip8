@@ -13,6 +13,12 @@ test('program counter increments on noop', () => {
   expect(read(descriptors.PC, 0)).toEqual(2);
 });
 
+test('program counter increments on noop', () => {
+  write(descriptors.PC, 0, 0x200);
+  wasmInstance.exports.tick();
+  expect(read(descriptors.PC, 0)).toEqual(0x202);
+});
+
 test('jumps to address NNN', () => {
   write(descriptors.PROGRAM, 0, 0x1b0b);
   wasmInstance.exports.tick();

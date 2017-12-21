@@ -1,5 +1,6 @@
 (module
   (import "_" "mem" (memory 1))
+  (data (i32.const 0xec0) "\60\90\20\00\20")
   (type $processInstruction (func (param $pc i32) (param $op i32) (result i32)))
   (func $incrementAddress (param $value i32) (result i32)
     (i32.add
@@ -76,7 +77,10 @@
     (if (result i32)
       (i32.eq (get_local $op) (i32.const 0x00e0))
       (then
-        (i32.const 0)
+        (call $00E0
+          (get_local $pc)
+          (get_local $op)
+        )
       )
       (else
         (if (result i32)
@@ -95,6 +99,32 @@
           )
         )
       )
+    )
+  )
+  ;; clear display
+  (func $00E0 (param $pc i32) (param $op i32) (result i32) (local $i i32)
+    (loop $loop
+      (i64.store offset=0xf00
+        (i32.mul
+          (get_local $i)
+          (i32.const 8)
+        )
+        (i64.const 0)
+      )
+      (br_if $loop
+        (i32.lt_u
+          (tee_local $i
+            (i32.add
+              (get_local $i)
+              (i32.const 1)
+            )
+          )
+          (i32.const 32)
+        )
+      )
+    )
+    (call $incrementAddress
+      (get_local $pc)
     )
   )
   ;; Return
@@ -507,7 +537,7 @@
   )
   ;; Sets I to the address NNN
   (func $ANNN (param $pc i32) (param $op i32) (result i32)
-    (i32.store16
+    (call $store16_u_be
       (i32.const 0x0ea2)
       (i32.and
         (i32.const 0x0fff)
@@ -521,13 +551,113 @@
   ;; Jump to V0 + NNN
   (func $BNNN (param $pc i32) (param $op i32) (result i32)
     (i32.add
-      (i32.load16_u
+      (i32.load8_u
         (i32.const 0x0eb0)
       )
       (i32.and
         (i32.const 0x0fff)
         (get_local $op)
       )
+    )
+  )
+  ;; Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels. Each row of 8 pixels is read as bit-coded starting from memory location I; I value doesn’t change after the execution of this instruction. As described above, VF is set to 1 if any screen pixels are flipped from set to unset when the sprite is drawn, and to 0 if that doesn’t happen
+  (func $DXYN (param $pc i32) (param $op i32) (result i32) (local $vx i64) (local $vy i32) (local $n i32) (local $I i32) (local $i i32)
+    ;; vx
+    (set_local $vx
+      (i64.load8_u offset=0xeb0
+        (i32.shr_u
+          (i32.and
+            (get_local $op)
+            (i32.const 0x0f00)
+          )
+          (i32.const 8)
+        )
+      )
+    )
+    ;; vy
+    (set_local $vy
+      (i32.load8_u offset=0xeb0
+        (i32.shr_u
+          (i32.and
+            (get_local $op)
+            (i32.const 0x00f0)
+          )
+          (i32.const 4)
+        )
+      )
+    )
+    ;; n
+    (set_local $n
+      (i32.and
+        (get_local $op)
+        (i32.const 0x000f)
+      )
+    )
+    ;; I
+    (set_local $I
+      (call $load16_u_be
+        (i32.const 0x0ea2)
+      )
+    )
+    (loop $loop
+      (i64.store offset=0xf00
+        (i32.mul
+          (i32.const 8)
+          (i32.rem_u
+            (i32.add
+              (get_local $vy)
+              (get_local $i)
+            )
+            (i32.const 32)
+          )
+        )
+        (i64.xor
+          (i64.load offset=0xf00
+            (i32.mul
+              (i32.const 8)
+              (i32.rem_u
+                (i32.add
+                  (get_local $vy)
+                  (get_local $i)
+                )
+                (i32.const 32)
+              )
+            )
+          )
+          (i64.rotl
+            (i64.load8_u
+              (get_local $I)
+            )
+            (i64.sub
+              (i64.const 56) ;; 64 - 8
+              (get_local $vx)
+            )
+          )
+        )
+      )
+      (call $store16_u_be
+        (i32.const 0x0ea2)
+        (tee_local $I
+          (i32.add
+            (get_local $I)
+            (i32.const 1)
+          )
+        )
+      )
+      (br_if $loop
+        (i32.lt_u
+          (tee_local $i
+            (i32.add
+              (get_local $i)
+              (i32.const 1)
+            )
+          )
+          (get_local $n)
+        )
+      )
+    )
+    (call $incrementAddress
+      (get_local $pc)
     )
   )
   ;; Mem/misc. dispatch
@@ -648,7 +778,7 @@
       $ANNN
       $BNNN
       $NOOP
-      $NOOP
+      $DXYN
       $NOOP
       $FX$$
       ;; bitwise operations

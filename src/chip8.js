@@ -108,26 +108,32 @@ const run = async () => {
 
   // load and instantiate the WASM module
   const res = await fetch("chip8.wasm");
-  const buffer = await res.arrayBuffer();
-  const module = await WebAssembly.compile(buffer);
-  const instance = await WebAssembly.instantiate(module);
-  const exports = instance.exports;
+  const module = await WebAssembly.compile(await res.arrayBuffer());
+  const memory = new WebAssembly.Memory({ initial: 1 });
+  const instance = await WebAssembly.instantiate(module, {
+    _: {
+      mem: memory
+    }
+  });
+  const tick = instance.exports.tick;
 
   // obtain the various memory sections
+  // TODO: reserve memory for interpreter
   const programMemory = new Uint8Array(
-    exports.memory.buffer,
-    exports.get_memory(),
-    4096
+    memory.buffer,
+    0,
+    // 0xEA0
+    0xF00
+  );
+  const reservedMemory = new Uint8Array(
+    memory.buffer,
+    0xEA0,
+    0xF00 - 0xEA0
   );
   const displayMemory = new Uint8Array(
-    exports.memory.buffer,
-    exports.get_display(),
-    2048
-  );
-  const vMemory = new Uint8Array(
-    exports.memory.buffer,
-    exports.get_register_v(),
-    16
+    memory.buffer,
+    0xF00,
+    0x1000 - 0xF00
   );
 
   // initialise the canvas
@@ -138,58 +144,69 @@ const run = async () => {
 
   const updateDisplay = () => {
     const imageData = ctx.createImageData(WIDTH, HEIGHT);
-    for (let i = 0; i < displayMemory.length; i++) {
-      imageData.data[i * 4] = displayMemory[i] === 1 ? 0x33 : 0;
-      imageData.data[i * 4 + 1] = displayMemory[i] === 1 ? 0xff : 0;
-      imageData.data[i * 4 + 2] = displayMemory[i] === 1 ? 0x66 : 0;
-      imageData.data[i * 4 + 3] = 255;
+    // displayMemory[7] = 96;
+    // displayMemory[15] = 144;
+    // displayMemory[23] = 32;
+    // displayMemory[39] = 32;
+    // console.log(displayMemory);
+    for (let y = 0; y < HEIGHT; y++) {
+      for (let x = 0; x < WIDTH; x++) {
+        // Each row is stored as a LE 64-bit unsigned integer
+        const byteOffset = y * WIDTH / 8 + 7 - (Math.floor(x / 8));
+        // MSB is left, LSB is right
+        const bitOffset = 7 - (x % 8);
+        const value = (displayMemory[byteOffset] >> bitOffset) & 0x01;
+        const i = y * WIDTH + x;
+        // console.log(x, y, byteOffset, bitOffset)
+        imageData.data[i * 4] = value ? 0x33 : 0x00;
+        imageData.data[i * 4 + 1] = value ? 0xff : 0x00;
+        imageData.data[i * 4 + 2] = value ? 0x66 : 0x00;
+        imageData.data[i * 4 + 3] = 0xff;
+      }
     }
     ctx.putImageData(imageData, 0, 0);
   };
 
-  const dumpRegisters = () => {
-    $("#r1").empty();
-    const vValues = Array(16);
-    for (let i = 0; i < vMemory.length; i++) {
-      $("#r1").append(`<div>V${i}: ${vMemory[i]}</div>`);
-    }
-    $("#r2").empty();
-    $("#r2").append(`<div>PC: ${exports.get_register_pc()}</div>`);
-    $("#r2").append(`<div>I: ${exports.get_register_i()}</div>`);
-  };
+  // const dumpRegisters = () => {
+  //   $("#r1").empty();
+  //   const vValues = Array(16);
+  //   for (let i = 0; i < vMemory.length; i++) {
+  //     $("#r1").append(`<div>V${i}: ${vMemory[i]}</div>`);
+  //   }
+  //   $("#r2").empty();
+  //   $("#r2").append(`<div>PC: ${exports.get_register_pc()}</div>`);
+  //   $("#r2").append(`<div>I: ${exports.get_register_i()}</div>`);
+  // };
 
   const dumpMemory = () => {
-    $(".memory").empty();
-    let address = 0x200;
-    while (address < 4096) {
+    let html = '';
+    for (let address = 0; address < programMemory.byteLength; address += 2) {
       const clazz = `addr_${address}`;
       const haddress = "0x" + hex(address, 4);
-      $(".memory").append(
-        `<div class='${clazz}'>${haddress} - ${dissassemble(
+      html += `<div class='${clazz}'>${haddress} - ${dissassemble(
           programMemory,
           address
-        )}</div>`
-      );
-      address += 2;
+        )}</div>`;
     }
+    document.querySelector('.memory').innerHTML = html;
   };
 
   const updateProgramCounter = () => {
-    $(`.memory > div`).removeClass("pc");
-    const pc = exports.get_register_pc();
-    const currentAddress = $(`.memory .addr_${pc}`).addClass("pc");
-    if (currentAddress[0]) {
-      const container = $(".memory");
-      container.scrollTop(
-        currentAddress.offset().top -
-          container.offset().top +
-          container.scrollTop()
-      );
+    const pc = (reservedMemory[0] << 8) | reservedMemory[1];
+    console.log({
+      pc: hex(reservedMemory[0]) + hex(reservedMemory[1]),
+      i: hex(reservedMemory[2]) + hex(reservedMemory[3])
+    });
+    const currentAddress = document.querySelector(`.memory .addr_${pc}`);
+    if (currentAddress) {
+      const container = document.querySelector('.memory');
+      container.scrollTop =
+        currentAddress.offsetTop - container.offsetTop;
     }
   };
 
   const updateUI = () => {
-    dumpRegisters();
+    // dumpRegisters();
     updateDisplay();
     updateProgramCounter();
   };
@@ -200,39 +217,46 @@ const run = async () => {
       .then(buffer => {
         // write the ROM to memory
         const rom = new DataView(buffer, 0, buffer.byteLength);
-        exports.reset();
         for (i = 0; i < rom.byteLength; i++) {
           programMemory[0x200 + i] = rom.getUint8(i);
         }
-        updateUI();
+        // reset program counter
+        reservedMemory[0x000] = 0x02;
+        reservedMemory[0x001] = 0x00;
+        // programMemory[0x200] = 0xd0;
+        // programMemory[0x201] = 0x15;
+        // programMemory[0xea2] = 0x0e;
+        // programMemory[0xea3] = 0xc0;
         dumpMemory();
+        updateUI();
       });
 
-  ROMS.forEach(rom => {
-    $("#roms").append(`<option value='${rom}'>${rom}</option>`);
-  });
+  document.querySelector("#roms").innerHTML =
+    ROMS.map(rom => `<option value='${rom}'>${rom}</option>`)
+      .join();
 
   document.getElementById("roms").addEventListener("change", e => {
     loadRom(e.target.value);
   });
 
   document.getElementById("step").addEventListener("click", () => {
-    exports.execute_cycle();
+    tick();
     updateUI();
   });
 
   let running = false;
-  const runloop = () => {
-    if (running) {
-      for (var i = 0; i < 10; i++) {
-        exports.execute_cycle();
-      }
-      exports.decrement_timers();
-    }
-    updateUI();
-    window.requestAnimationFrame(runloop);
-  };
-  window.requestAnimationFrame(runloop);
+  // const runloop = () => {
+  //   if (running) {
+  //     tick();
+  //     // for (var i = 0; i < 10; i++) {
+  //     //   exports.execute_cycle();
+  //     // }
+  //     // exports.decrement_timers();
+  //   }
+  //   updateUI();
+  //   window.requestAnimationFrame(runloop);
+  // };
+  // window.requestAnimationFrame(runloop);
 
   const runButton = document.getElementById("run");
   runButton.addEventListener("click", () => {
@@ -246,15 +270,15 @@ const run = async () => {
   });
 
   document.addEventListener("keydown", event => {
-    exports.key_down(translateKeys[event.keyCode]);
+    // exports.key_down(translateKeys[event.keyCode]);
   });
 
   document.addEventListener("keyup", event => {
-    exports.key_up(translateKeys[event.keyCode]);
+    // exports.key_up(translateKeys[event.keyCode]);
   });
 
-  $("#roms")[0].value = "WIPEOFF";
-  loadRom("WIPEOFF");
+  document.querySelector("#roms").value = "IBM";
+  loadRom("IBM");
 };
 
 run();

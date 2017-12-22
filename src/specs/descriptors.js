@@ -35,6 +35,11 @@ module.exports = {
     offset: 0xea5,
     count: 1
   },
+  PRNG: {
+    bits: 8,
+    offset: 0xea6,
+    count: 2
+  },
   V: {
     bits: 8,
     offset: 0xeb0,

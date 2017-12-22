@@ -1,6 +1,7 @@
 (module
   (import "_" "mem" (memory 1))
   (data (i32.const 0xec0) "\60\90\20\00\20")
+  (data (i32.const 0xea6) "\aa")
   (type $processInstruction (func (param $pc i32) (param $op i32) (result i32)))
   (func $incrementAddress (param $value i32) (result i32)
     (i32.add
@@ -560,6 +561,76 @@
       )
     )
   )
+  ;; Sets VX to random() AND NN
+  (func $CXNN (param $pc i32) (param $op i32) (result i32) (local $s i32) (local $a i32)
+    (set_local $s
+      (i32.load8_u
+        (i32.const 0x0ea6)
+      )
+    )
+    (set_local $a
+      (i32.load8_u
+        (i32.const 0x0ea7)
+      )
+    )
+    (set_local $s
+      (i32.xor
+        (get_local $s)
+        (i32.shl
+          (get_local $s)
+          (i32.const 3)
+        )
+      )
+    )
+    (set_local $s
+      (i32.xor
+        (get_local $s)
+        (i32.shr_u
+          (get_local $s)
+          (i32.const 5)
+        )
+      )
+    )
+    (set_local $s
+      (i32.xor
+        (get_local $s)
+        (i32.shr_u
+          (get_local $a)
+          (i32.const 5)
+        )
+      )
+    )
+    (i32.store8 offset=0xeb0
+      (i32.shr_u
+        (i32.and
+          (get_local $op)
+          (i32.const 0x0f00)
+        )
+        (i32.const 8)
+      )
+      (i32.and
+        (i32.and
+          (i32.const 0xff)
+          (get_local $op)
+        )
+        (get_local $s)
+      )
+    )
+    (i32.store8
+      (i32.const 0x0ea6)
+      (get_local $s)
+    )
+    (i32.store8
+      (i32.const 0x0ea7)
+      (i32.add
+        (get_local $a)
+        (i32.const 1)
+      )
+    )
+    (call $incrementAddress
+      (get_local $pc)
+    )
+  )
   ;; Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels. Each row of 8 pixels is read as bit-coded starting from memory location I; I value doesn’t change after the execution of this instruction. As described above, VF is set to 1 if any screen pixels are flipped from set to unset when the sprite is drawn, and to 0 if that doesn’t happen
   (func $DXYN (param $pc i32) (param $op i32) (result i32) (local $vx i64) (local $vy i32) (local $n i32) (local $I i32) (local $i i32) (local $old i64) (local $update i64) (local $new i64) (local $collision i32)
     ;; vx
@@ -799,7 +870,7 @@
       $9XY0
       $ANNN
       $BNNN
-      $NOOP
+      $CXNN
       $DXYN
       $NOOP
       $FX$$

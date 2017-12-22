@@ -561,7 +561,7 @@
     )
   )
   ;; Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels. Each row of 8 pixels is read as bit-coded starting from memory location I; I value doesn’t change after the execution of this instruction. As described above, VF is set to 1 if any screen pixels are flipped from set to unset when the sprite is drawn, and to 0 if that doesn’t happen
-  (func $DXYN (param $pc i32) (param $op i32) (result i32) (local $vx i64) (local $vy i32) (local $n i32) (local $I i32) (local $i i32)
+  (func $DXYN (param $pc i32) (param $op i32) (result i32) (local $vx i64) (local $vy i32) (local $n i32) (local $I i32) (local $i i32) (local $old i64) (local $update i64) (local $new i64) (local $collision i32)
     ;; vx
     (set_local $vx
       (i64.load8_u offset=0xeb0
@@ -611,26 +611,44 @@
             (i32.const 32)
           )
         )
-        (i64.xor
-          (i64.load offset=0xf00
-            (i32.mul
-              (i32.const 8)
-              (i32.rem_u
-                (i32.add
-                  (get_local $vy)
-                  (get_local $i)
+        (tee_local $new
+          (i64.xor
+            (tee_local $old
+              (i64.load offset=0xf00
+                (i32.mul
+                  (i32.const 8)
+                  (i32.rem_u
+                    (i32.add
+                      (get_local $vy)
+                      (get_local $i)
+                    )
+                    (i32.const 32)
+                  )
                 )
-                (i32.const 32)
+              )
+            )
+            (tee_local $update
+              (i64.rotl
+                (i64.load8_u
+                  (get_local $I)
+                )
+                (i64.sub
+                  (i64.const 56) ;; 64 - 8
+                  (get_local $vx)
+                )
               )
             )
           )
-          (i64.rotl
-            (i64.load8_u
-              (get_local $I)
-            )
-            (i64.sub
-              (i64.const 56) ;; 64 - 8
-              (get_local $vx)
+        )
+      )
+      (set_local $collision
+        (i32.or
+          (get_local $collision)
+          (i64.ne
+            (get_local $new)
+            (i64.or
+              (get_local $old)
+              (get_local $update)
             )
           )
         )
@@ -655,6 +673,10 @@
           (get_local $n)
         )
       )
+    )
+    (i32.store8
+      (i32.const 0xebf)
+      (get_local $collision)
     )
     (call $incrementAddress
       (get_local $pc)

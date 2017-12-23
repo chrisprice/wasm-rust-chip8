@@ -26,6 +26,7 @@ test('draws a sprite at (vx, vy) of height n offset I', () => {
   write(descriptors.PROGRAM, 0, 0xd015);
   write(descriptors.I, 0, descriptors.SPRITE.offset);
   wasmInstance.exports.tick();
+  expect(read(descriptors.I, 0)).toBe(descriptors.SPRITE.offset);
   // Each row in VIDEO is encoded as a 64-bit LE. See https://archive.org/stream/byte-magazine-1978-12/1978_12_BYTE_03-12_Life#page/n113/mode/2up
   expect(read(descriptors.VIDEO, 0 * 8 + 7)).toBe(read(descriptors.SPRITE, 0));
   expect(read(descriptors.VIDEO, 1 * 8 + 7)).toBe(read(descriptors.SPRITE, 1));
@@ -41,6 +42,7 @@ test('draws a sprite at (vx, vy) of height n offset I (wraps x/y)', () => {
   write(descriptors.PROGRAM, 0, 0xd015);
   write(descriptors.I, 0, descriptors.SPRITE.offset);
   wasmInstance.exports.tick();
+  expect(read(descriptors.I, 0)).toBe(descriptors.SPRITE.offset);
   // Each row in VIDEO is encoded as a 64-bit LE. See https://archive.org/stream/byte-magazine-1978-12/1978_12_BYTE_03-12_Life#page/n113/mode/2up
   expect(read(descriptors.VIDEO, 0 * 8 + 7)).toBe(read(descriptors.SPRITE, 0));
   expect(read(descriptors.VIDEO, 1 * 8 + 7)).toBe(read(descriptors.SPRITE, 1));
@@ -57,6 +59,7 @@ test('draws a sprite at (vx, vy) of height n offset I (collision)', () => {
   write(descriptors.PROGRAM, 0, 0xd015);
   write(descriptors.I, 0, descriptors.SPRITE.offset);
   wasmInstance.exports.tick();
+  expect(read(descriptors.I, 0)).toBe(descriptors.SPRITE.offset);
   // Each row in VIDEO is encoded as a 64-bit LE. See https://archive.org/stream/byte-magazine-1978-12/1978_12_BYTE_03-12_Life#page/n113/mode/2up
   expect(read(descriptors.VIDEO, 0 * 8 + 7)).toBe(read(descriptors.SPRITE, 0)^0xff);
   expect(read(descriptors.VIDEO, 1 * 8 + 7)).toBe(read(descriptors.SPRITE, 1));

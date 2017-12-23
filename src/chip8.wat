@@ -724,13 +724,10 @@
           )
         )
       )
-      (call $store16_u_be
-        (i32.const 0x0ea2)
-        (tee_local $I
-          (i32.add
-            (get_local $I)
-            (i32.const 1)
-          )
+      (set_local $I
+        (i32.add
+          (get_local $I)
+          (i32.const 1)
         )
       )
       (br_if $loop

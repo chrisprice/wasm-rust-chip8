@@ -40,6 +40,11 @@ module.exports = {
     offset: 0xea6,
     count: 2
   },
+  KEYBOARD: {
+    bits: 8,
+    offset: 0xea8,
+    count: 1
+  },
   V: {
     bits: 8,
     offset: 0xeb0,

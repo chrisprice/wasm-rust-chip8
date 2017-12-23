@@ -753,6 +753,45 @@
       (get_local $pc)
     )
   )
+  ;; Skip/don't skip if VX is/isn't pressed
+  (func $EX$$ (param $pc i32) (param $op i32) (result i32)
+    (if (result i32)
+      (i32.xor
+        (i32.eq
+          (i32.load8_u offset=0xeb0
+            (i32.shr_u
+              (i32.and
+                (get_local $op)
+                (i32.const 0x0f00)
+              )
+              (i32.const 8)
+            )
+          )
+          (i32.load8_u
+            (i32.const 0xea8)
+          )
+        )
+        (i32.eq
+          (i32.and
+            (get_local $op)
+            (i32.const 0xff)
+          )
+          (i32.const 0x9e)
+        )
+      )
+      (then
+        (call $incrementAddress
+          (get_local $pc)
+        )
+      )
+      (else
+        (i32.add
+          (get_local $pc)
+          (i32.const 4)
+        )
+      )
+    )
+  )
   ;; Mem/misc. dispatch
   (func $FX$$ (param $pc i32) (param $op i32) (result i32) (local $x i32) (local $subop i32)
     (set_local $x
@@ -770,48 +809,84 @@
         (i32.const 0xff)
       )
     )
-    (if
+    (if (result i32)
       (i32.eq
         (get_local $subop)
-        (i32.const 0x1e)
+        (i32.const 0x0a)
       )
       (then
-        (call $FX1E
-          (get_local $x)
-        ))
-    )
-    (if
-      (i32.eq
-        (get_local $subop)
-        (i32.const 0x29)
+      ;; Waits for keypress, sets VX to key
+      ;; Inlined to allow mutation of pc
+      ;; (func $FX0A (param $x i32)
+        (if (result i32)
+          (i32.ne
+            (i32.load8_u
+              (i32.const 0xea8)
+            )
+            (i32.const 0)
+          )
+          (then
+            (i32.store8 offset=0xeb0
+              (get_local $x)
+              (i32.load8_u
+                (i32.const 0xea8)
+              )
+            )
+            (call $incrementAddress
+              (get_local $pc)
+            )
+          )
+          (else
+            (get_local $pc)
+          )
+        )
+      ;; )
       )
-      (then
-        (call $FX29
-          (get_local $x)
-        ))
-    )
-    (if
-      (i32.eq
-        (get_local $subop)
-        (i32.const 0x55)
+      (else
+        (if
+          (i32.eq
+            (get_local $subop)
+            (i32.const 0x1e)
+          )
+          (then
+            (call $FX1E
+              (get_local $x)
+            ))
+        )
+        (if
+          (i32.eq
+            (get_local $subop)
+            (i32.const 0x29)
+          )
+          (then
+            (call $FX29
+              (get_local $x)
+            ))
+        )
+        (if
+          (i32.eq
+            (get_local $subop)
+            (i32.const 0x55)
+          )
+          (then
+            (call $FX55
+              (get_local $x)
+            ))
+        )
+        (if
+          (i32.eq
+            (get_local $subop)
+            (i32.const 0x65)
+          )
+          (then
+            (call $FX65
+              (get_local $x)
+            ))
+        )
+        (call $incrementAddress
+          (get_local $pc)
+        )
       )
-      (then
-        (call $FX55
-          (get_local $x)
-        ))
-    )
-    (if
-      (i32.eq
-        (get_local $subop)
-        (i32.const 0x65)
-      )
-      (then
-        (call $FX65
-          (get_local $x)
-        ))
-    )
-    (call $incrementAddress
-      (get_local $pc)
     )
   )
   ;; Adds VX to I
@@ -872,7 +947,7 @@
       $BNNN
       $CXNN
       $DXYN
-      $NOOP
+      $EX$$
       $FX$$
       ;; bitwise operations
       $8XY0

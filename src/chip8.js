@@ -270,11 +270,11 @@ const run = async () => {
   });
 
   document.addEventListener("keydown", event => {
-    // exports.key_down(translateKeys[event.keyCode]);
+    reservedMemory[0x08] = translateKeys[event.keyCode];
   });
 
   document.addEventListener("keyup", event => {
-    // exports.key_up(translateKeys[event.keyCode]);
+    reservedMemory[0x08] = 0x00;
   });
 
   document.querySelector("#roms").value = "IBM";

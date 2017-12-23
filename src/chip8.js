@@ -245,18 +245,17 @@ const run = async () => {
   });
 
   let running = false;
-  // const runloop = () => {
-  //   if (running) {
-  //     tick();
-  //     // for (var i = 0; i < 10; i++) {
-  //     //   exports.execute_cycle();
-  //     // }
-  //     // exports.decrement_timers();
-  //   }
-  //   updateUI();
-  //   window.requestAnimationFrame(runloop);
-  // };
-  // window.requestAnimationFrame(runloop);
+  const runloop = () => {
+    if (running) {
+      requestAnimationFrame(runloop);
+      tick();
+      updateUI();
+      // for (var i = 0; i < 10; i++) {
+      //   exports.execute_cycle();
+      // }
+      // exports.decrement_timers();
+    }
+  };
 
   const runButton = document.getElementById("run");
   runButton.addEventListener("click", () => {
@@ -265,6 +264,7 @@ const run = async () => {
       runButton.innerHTML = "Start";
     } else {
       running = true;
+      requestAnimationFrame(runloop);
       runButton.innerHTML = "Stop";
     }
   });

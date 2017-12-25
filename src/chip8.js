@@ -119,18 +119,18 @@ const run = async () => {
 
   // obtain the various memory sections
   // TODO: reserve memory for interpreter
-  const programMemory = new Uint8Array(
+  window.programMemory = new Uint8Array(
     memory.buffer,
     0,
     // 0xEA0
     0xF00
   );
-  const reservedMemory = new Uint8Array(
+  window.reservedMemory = new Uint8Array(
     memory.buffer,
     0xEA0,
     0xF00 - 0xEA0
   );
-  const displayMemory = new Uint8Array(
+  window.displayMemory = new Uint8Array(
     memory.buffer,
     0xF00,
     0x1000 - 0xF00

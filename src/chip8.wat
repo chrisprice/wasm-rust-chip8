@@ -401,7 +401,7 @@
         (get_local $vy)
       )
     )
-    (i32.store
+    (i32.store8
       (i32.const 0x0ebf)
       (i32.shr_u
         (i32.and

@@ -863,6 +863,16 @@
         (if
           (i32.eq
             (get_local $subop)
+            (i32.const 0x33)
+          )
+          (then
+            (call $FX33
+              (get_local $x)
+            ))
+        )
+        (if
+          (i32.eq
+            (get_local $subop)
             (i32.const 0x55)
           )
           (then
@@ -906,6 +916,50 @@
     (call $store16_u_be
       (i32.const 0x0ea2)
       (i32.const 0x0ec0)
+    )
+  )
+  ;; Stores the binary-coded decimal representation of VX, with the most significant of three digits at the address in I
+  (func $FX33 (param $x i32) (local $i i32)
+    (set_local $i
+      (call $load16_u_be
+        (i32.const 0x0ea2)
+      )
+    )
+    (i32.store8
+      (get_local $i)
+      (i32.div_u
+        (i32.load8_u
+          (get_local $x)
+        )
+        (i32.const 100)
+      )
+    )
+    (i32.store8
+      (i32.add
+        (get_local $i)
+        (i32.const 1)
+      )
+      (i32.div_u
+        (i32.rem_u
+          (i32.load8_u
+            (get_local $x)
+          )
+          (i32.const 100)
+        )
+        (i32.const 10)
+      )
+    )
+    (i32.store8
+      (i32.add
+        (get_local $i)
+        (i32.const 2)
+      )
+      (i32.rem_u
+        (i32.load8_u offset=0xeb0
+          (get_local $x)
+        )
+        (i32.const 10)
+      )
     )
   )
   ;; Stores V0 to VX (including VX) in memory starting at address I (increased by X)

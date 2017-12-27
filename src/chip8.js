@@ -64,8 +64,8 @@ const dissassemble = (program, addr) => {
   if (opcode === 0x00ee) return "RET";
   if (inRange(opcode, 0x1000, 0x1fff)) return `JP 0x${hex(nnn, 3)}`;
   if (inRange(opcode, 0x2000, 0x2fff)) return `CALL 0x${hex(nnn, 3)}`;
-  if (inRange(opcode, 0x3000, 0x3fff)) return `SE V${n} ${kk}`;
-  if (inRange(opcode, 0x4000, 0x4fff)) return `SNE V${n} ${kk}`;
+  if (inRange(opcode, 0x3000, 0x3fff)) return `SE V${x} ${kk}`;
+  if (inRange(opcode, 0x4000, 0x4fff)) return `SNE V${x} ${kk}`;
   if (inRange(opcode, 0x5000, 0x5fff)) return `SE V${x} V${y}`;
   if (inRange(opcode, 0x6000, 0x6fff)) return `LD V${x} ${kk}`;
   if (inRange(opcode, 0x7000, 0x7fff)) return `ADD V${x} ${kk}`;
@@ -81,7 +81,7 @@ const dissassemble = (program, addr) => {
     if (n === 0xe) return `SHL V${x}`;
   }
   if (inRange(opcode, 0x9000, 0x9fff)) return `SNE V${x} V${y}`;
-  if (inRange(opcode, 0xa000, 0xafff)) return `LDI ${nnn}`;
+  if (inRange(opcode, 0xa000, 0xafff)) return `LDI 0x${hex(x)}${hex(kk)}`;
   if (inRange(opcode, 0xb000, 0xbfff)) return `JP V0 + ${nnn}`;
   if (inRange(opcode, 0xc000, 0xcfff)) return `RND ${kk}`;
   if (inRange(opcode, 0xd000, 0xdfff)) return `DRW V${x} V${y} ${n}`;
@@ -96,8 +96,8 @@ const dissassemble = (program, addr) => {
     if (kk === 0x1e) return `ADD I, V${x}`;
     if (kk === 0x29) return `LD F, V${x}`;
     if (kk === 0x33) return `LD B, V${x}`;
-    if (kk === 0x55) return `LD [I], ${x}`;
-    if (kk === 0x65) return `LD ${x}, [I]`;
+    if (kk === 0x55) return `LD [I], [V${x}]`;
+    if (kk === 0x65) return `LD [V${x}], [I]`;
   }
   return "-";
 };
@@ -167,23 +167,23 @@ const run = async () => {
     ctx.putImageData(imageData, 0, 0);
   };
 
-  // const dumpRegisters = () => {
-  //   $("#r1").empty();
-  //   const vValues = Array(16);
-  //   for (let i = 0; i < vMemory.length; i++) {
-  //     $("#r1").append(`<div>V${i}: ${vMemory[i]}</div>`);
-  //   }
-  //   $("#r2").empty();
-  //   $("#r2").append(`<div>PC: ${exports.get_register_pc()}</div>`);
-  //   $("#r2").append(`<div>I: ${exports.get_register_i()}</div>`);
-  // };
+  const dumpRegisters = () => {
+    document.querySelector('#r1').innerHTML = new Array(16)
+      .fill(0)
+      .map((d, i) => `<div>V${i}: ${hex(reservedMemory[0x10 + i])}</div>`)
+      .join('');
+    document.querySelector('#r2').innerHTML = [
+      `<div>PC: ${hex(reservedMemory[0])}${hex(reservedMemory[1])}</div>`,
+      `<div>I: ${hex(reservedMemory[2])}${hex(reservedMemory[3])}</div>`,
+    ].join('');
+  };
 
   const dumpMemory = () => {
     let html = '';
     for (let address = 0; address < programMemory.byteLength; address += 2) {
       const clazz = `addr_${address}`;
       const haddress = "0x" + hex(address, 4);
-      html += `<div class='${clazz}'>${haddress} - ${dissassemble(
+      html += `<div class='${clazz}'>${haddress} - ${hex(programMemory[address])} ${hex(programMemory[address + 1])} - ${dissassemble(
           programMemory,
           address
         )}</div>`;
@@ -206,7 +206,7 @@ const run = async () => {
   };
 
   const updateUI = () => {
-    // dumpRegisters();
+    dumpRegisters();
     updateDisplay();
     updateProgramCounter();
   };
@@ -277,8 +277,8 @@ const run = async () => {
     reservedMemory[0x08] = 0x00;
   });
 
-  document.querySelector("#roms").value = "IBM";
-  loadRom("IBM");
+  document.querySelector("#roms").value = "BLINKY";
+  loadRom("BLINKY");
 };
 
 run();

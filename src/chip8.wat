@@ -56,7 +56,7 @@
         )
       )
       (br_if $loop
-        (i32.eq
+        (i32.le_u
           (tee_local $i
             (i32.add
               (get_local $i)
@@ -331,9 +331,9 @@
     )
   )
   ;; Bitwise dispatch
-  (func $8XY$ (param $pc i32) (param $op i32) (result i32) (local $vx i32)
+  (func $8XY$ (param $pc i32) (param $op i32) (result i32) (local $x i32)
     (i32.store8 offset=0xeb0
-      (tee_local $vx
+      (tee_local $x
         (i32.shr_u
           (i32.and
             (get_local $op)
@@ -344,7 +344,7 @@
       )
       (call_indirect (type $processInstruction)
         (i32.load8_u offset=0xeb0
-          (get_local $vx)
+          (get_local $x)
         )
         (i32.load8_u offset=0xeb0
           (i32.shr_u
@@ -442,16 +442,17 @@
     )
   )
   ;; Shifts VY right by one and copies the result to VX. VF is set to the value of the least significant bit of VY before the shift.
+  ;;  On (THIS!) some modern interpreters, VX is shifted instead, while VY is ignored.
   (func $8XY6 (param $vx i32) (param $vy i32) (result i32) (local $result i32)
     (i32.shr_u
-      (get_local $vy)
+      (get_local $vx)
       (i32.const 1)
     )
     (i32.store
       (i32.const 0x0ebf)
       (i32.and
         (i32.const 0x01)
-        (get_local $vy)
+        (get_local $vx)
       )
     )
   )
@@ -485,9 +486,10 @@
     )
   )
   ;; Shifts VY left by one and copies the result to VX. VF is set to the value of the most significant bit of VY before the shift
+  ;;  On (THIS!) some modern interpreters, VX is shifted instead, while VY is ignored.
   (func $8XYE (param $vx i32) (param $vy i32) (result i32) (local $result i32)
     (i32.shl
-      (get_local $vy)
+      (get_local $vx)
       (i32.const 1)
     )
     (i32.store
@@ -495,7 +497,7 @@
       (i32.shr_u
         (i32.and
           (i32.const 0x80)
-          (get_local $vy)
+          (get_local $vx)
         )
         (i32.const 7)
       )

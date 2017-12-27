@@ -106,34 +106,36 @@ test('set vx to vy minus vx (borrow)', () => {
 });
 
 // Shifts VY right by one and copies the result to VX. VF is set to the value of the least significant bit of VY before the shift.
+//  On (THIS!) some modern interpreters, VX is shifted instead, while VY is ignored.
 test('set vx to vy shifted right (vy LSB=0)', () => {
   write(descriptors.PROGRAM, 0, 0x8016);
-  write(descriptors.V, 0, 0x0f);
-  write(descriptors.V, 1, 0xf0);
+  write(descriptors.V, 0, 0xf0);
+  write(descriptors.V, 1, 0x0f);
   wasmInstance.exports.tick();
   expect(read(descriptors.V, 0)).toEqual(0x78);
-  expect(read(descriptors.V, 1)).toEqual(0xf0);
+  expect(read(descriptors.V, 1)).toEqual(0x0f);
   expect(read(descriptors.V, 0xf)).toEqual(0x00);
 });
 
 test('set vx to vy shifted right (vy LSB=1)', () => {
   write(descriptors.PROGRAM, 0, 0x8016);
-  write(descriptors.V, 0, 0xf0);
-  write(descriptors.V, 1, 0x0f);
+  write(descriptors.V, 0, 0x0f);
+  write(descriptors.V, 1, 0xf0);
   wasmInstance.exports.tick();
   expect(read(descriptors.V, 0)).toEqual(0x07);
-  expect(read(descriptors.V, 1)).toEqual(0x0f);
+  expect(read(descriptors.V, 1)).toEqual(0xf0);
   expect(read(descriptors.V, 0xf)).toEqual(0x01);
 });
 
 // Shifts VY left by one and copies the result to VX. VF is set to the value of the most significant bit of VY before the shift
+//  On (THIS!) some modern interpreters, VX is shifted instead, while VY is ignored.
 test('set vx to vy shifted left (vy MSB=0)', () => {
   write(descriptors.PROGRAM, 0, 0x801e);
-  write(descriptors.V, 0, 0xf0);
-  write(descriptors.V, 1, 0x0f);
+  write(descriptors.V, 0, 0x0f);
+  write(descriptors.V, 1, 0xf0);
   wasmInstance.exports.tick();
   expect(read(descriptors.V, 0)).toEqual(0x1e);
-  expect(read(descriptors.V, 1)).toEqual(0x0f);
+  expect(read(descriptors.V, 1)).toEqual(0xf0);
   expect(read(descriptors.V, 0xf)).toEqual(0x00);
 });
 

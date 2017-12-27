@@ -253,7 +253,7 @@
 00000ea: 03                                        ; local index
 00000eb: 20                                        ; get_local
 00000ec: 02                                        ; local index
-00000ed: 46                                        ; i32.eq
+00000ed: 4d                                        ; i32.le_u
 00000ee: 0d                                        ; br_if
 00000ef: 00                                        ; break depth
 00000f0: 0b                                        ; end
@@ -757,7 +757,7 @@
 00002e1: 01                                        ; local type count
 00002e2: 7f                                        ; i32
 00002e3: 20                                        ; get_local
-00002e4: 01                                        ; local index
+00002e4: 00                                        ; local index
 00002e5: 41                                        ; i32.const
 00002e6: 01                                        ; i32 literal
 00002e7: 76                                        ; i32.shr_u
@@ -766,7 +766,7 @@
 00002eb: 41                                        ; i32.const
 00002ec: 01                                        ; i32 literal
 00002ed: 20                                        ; get_local
-00002ee: 01                                        ; local index
+00002ee: 00                                        ; local index
 00002ef: 71                                        ; i32.and
 00002f0: 36                                        ; i32.store
 00002f1: 02                                        ; alignment
@@ -819,7 +819,7 @@
 000031e: 01                                        ; local type count
 000031f: 7f                                        ; i32
 0000320: 20                                        ; get_local
-0000321: 01                                        ; local index
+0000321: 00                                        ; local index
 0000322: 41                                        ; i32.const
 0000323: 01                                        ; i32 literal
 0000324: 74                                        ; i32.shl
@@ -828,7 +828,7 @@
 0000328: 41                                        ; i32.const
 0000329: 8001                                      ; i32 literal
 000032b: 20                                        ; get_local
-000032c: 01                                        ; local index
+000032c: 00                                        ; local index
 000032d: 71                                        ; i32.and
 000032e: 41                                        ; i32.const
 000032f: 07                                        ; i32 literal

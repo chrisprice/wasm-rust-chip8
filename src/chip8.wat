@@ -843,6 +843,36 @@
         (if
           (i32.eq
             (get_local $subop)
+            (i32.const 0x07)
+          )
+          (then
+            (call $FX07
+              (get_local $x)
+            ))
+        )
+        (if
+          (i32.eq
+            (get_local $subop)
+            (i32.const 0x15)
+          )
+          (then
+            (call $FX15
+              (get_local $x)
+            ))
+        )
+        (if
+          (i32.eq
+            (get_local $subop)
+            (i32.const 0x18)
+          )
+          (then
+            (call $FX18
+              (get_local $x)
+            ))
+        )
+        (if
+          (i32.eq
+            (get_local $subop)
             (i32.const 0x1e)
           )
           (then
@@ -893,6 +923,33 @@
         (call $incrementAddress
           (get_local $pc)
         )
+      )
+    )
+  )
+  ;; Sets vx to the value of the delay timer
+  (func $FX07 (param $x i32)
+    (i32.store8 offset=0xeb0
+      (get_local $x)
+      (i32.load8_u
+        (i32.const 0xea4)
+      )
+    )
+  )
+  ;; Sets the delay timer to the value of vx
+  (func $FX15 (param $x i32)
+    (i32.store8
+      (i32.const 0xea4)
+      (i32.load8_u offset=0xeb0
+        (get_local $x)
+      )
+    )
+  )
+  ;; Sets the sound timer to the value of vx
+  (func $FX18 (param $x i32)
+    (i32.store8
+      (i32.const 0xea5)
+      (i32.load8_u offset=0xeb0
+        (get_local $x)
       )
     )
   )
@@ -1018,7 +1075,42 @@
       $8XYE
     )
   )
-  (func (export "tick") (local $pc i32) (local $op i32)
+  (func (export "tick") (local $pc i32) (local $op i32) (local $timer i32)
+    ;; decrement timers
+    (i32.store8
+      (i32.const 0xea4)
+      (select
+        (tee_local $timer
+          (i32.load8_u
+            (i32.const 0xea4)
+          )
+        )
+        (i32.sub
+          (get_local $timer)
+          (i32.const 1)
+        )
+        (i32.eqz
+          (get_local $timer)
+        )
+      )
+    )
+    (i32.store8
+      (i32.const 0xea5)
+      (select
+        (tee_local $timer
+          (i32.load8_u
+            (i32.const 0xea5)
+          )
+        )
+        (i32.sub
+          (get_local $timer)
+          (i32.const 1)
+        )
+        (i32.eqz
+          (get_local $timer)
+        )
+      )
+    )
     (call $store16_u_be
       (i32.const 0x0ea0)
       (call_indirect (type $processInstruction)

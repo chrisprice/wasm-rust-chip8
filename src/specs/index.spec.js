@@ -7,20 +7,39 @@ beforeAll(async () => {
 });
 beforeEach(clear);
 
-const descriptor = {
+const littleEndianDescriptor = {
   bits: 16,
   offset: 5,
   count: 2
 };
 
-test('read', () => {
+test('read LE', () => {
   array[7] = 0x12;
   array[8] = 0x34;
-  expect(read(descriptor, 1)).toBe(0x1234)
+  expect(read(littleEndianDescriptor, 1)).toBe(0x3412)
 });
 
-test('write', () => {
-  write(descriptor, 1, 0x1234);
+test('write BE', () => {
+  write(littleEndianDescriptor, 1, 0x3412);
+  expect(array[7]).toBe(0x12)
+  expect(array[8]).toBe(0x34)
+});
+
+const bigEndianDescriptor = {
+  bits: 16,
+  offset: 5,
+  count: 2,
+  bigEndian: true
+};
+
+test('read BE', () => {
+  array[7] = 0x12;
+  array[8] = 0x34;
+  expect(read(bigEndianDescriptor, 1)).toBe(0x1234)
+});
+
+test('write BE', () => {
+  write(bigEndianDescriptor, 1, 0x1234);
   expect(array[7]).toBe(0x12)
   expect(array[8]).toBe(0x34)
 });

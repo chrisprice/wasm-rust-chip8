@@ -173,8 +173,8 @@ const run = async () => {
       .map((d, i) => `<div>V${i}: ${hex(reservedMemory[0x10 + i])}</div>`)
       .join('');
     document.querySelector('#r2').innerHTML = [
-      `<div>PC: ${hex(reservedMemory[0])}${hex(reservedMemory[1])}</div>`,
-      `<div>I: ${hex(reservedMemory[2])}${hex(reservedMemory[3])}</div>`,
+      `<div>PC: ${hex(reservedMemory[1])}${hex(reservedMemory[0])}</div>`,
+      `<div>I: ${hex(reservedMemory[3])}${hex(reservedMemory[2])}</div>`,
     ].join('');
   };
 
@@ -192,11 +192,7 @@ const run = async () => {
   };
 
   const updateProgramCounter = () => {
-    const pc = (reservedMemory[0] << 8) | reservedMemory[1];
-    console.log({
-      pc: hex(reservedMemory[0]) + hex(reservedMemory[1]),
-      i: hex(reservedMemory[2]) + hex(reservedMemory[3])
-    });
+    const pc = (reservedMemory[1] << 8) | reservedMemory[0];
     const currentAddress = document.querySelector(`.memory .addr_${pc}`);
     if (currentAddress) {
       const container = document.querySelector('.memory');
@@ -221,8 +217,8 @@ const run = async () => {
           programMemory[0x200 + i] = rom.getUint8(i);
         }
         // reset program counter
-        reservedMemory[0x000] = 0x02;
-        reservedMemory[0x001] = 0x00;
+        reservedMemory[0x000] = 0x00;
+        reservedMemory[0x001] = 0x02;
         // programMemory[0x200] = 0xd0;
         // programMemory[0x201] = 0x15;
         // programMemory[0xea2] = 0x0e;

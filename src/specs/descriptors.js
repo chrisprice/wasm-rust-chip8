@@ -5,7 +5,8 @@ module.exports = {
     // offset: 0x200,
     // count: (0xea0 - 0x200) / 2
     offset: 0x000,
-    count: 0xea0 / 2
+    count: 0xea0 / 2,
+    bigEndian: true
   },
   DATA: {
     bits: 8,

@@ -25,22 +25,6 @@
       )
     )
   )
-  (func $store16_u_be (param $offset i32) (param $value i32)
-    (i32.store8
-      (get_local $offset)
-      (i32.shr_u
-        (get_local $value)
-        (i32.const 8)
-      )
-    )
-    (i32.store8
-      (i32.add
-        (get_local $offset)
-        (i32.const 1)
-      )
-      (get_local $value)
-    )
-  )
   (func $move_memory (param $from i32) (param $to i32) (param $repeat i32) (local $i i32)
     (loop $loop
       (i32.store8
@@ -145,7 +129,7 @@
       (get_local $sp)
     )
     ;; set program counter to address from stack
-    (call $load16_u_be
+    (i32.load16_u
       (i32.add
         (i32.const 0xed0)
         (get_local $sp)
@@ -168,7 +152,7 @@
       )
     )
     ;; store incremented program counter on stack
-    (call $store16_u_be
+    (i32.store16
       (i32.add
         (i32.const 0xed0)
         (get_local $sp)
@@ -540,7 +524,7 @@
   )
   ;; Sets I to the address NNN
   (func $ANNN (param $pc i32) (param $op i32) (result i32)
-    (call $store16_u_be
+    (i32.store
       (i32.const 0x0ea2)
       (i32.and
         (i32.const 0x0fff)
@@ -668,7 +652,7 @@
     )
     ;; I
     (set_local $I
-      (call $load16_u_be
+      (i32.load16_u
         (i32.const 0x0ea2)
       )
     )
@@ -957,10 +941,10 @@
   )
   ;; Adds VX to I
   (func $FX1E (param $x i32)
-    (call $store16_u_be
+    (i32.store16
       (i32.const 0x0ea2)
       (i32.add
-        (call $load16_u_be
+        (i32.load16_u
           (i32.const 0x0ea2)
         )
         (i32.load8_u offset=0xeb0
@@ -972,7 +956,7 @@
   ;; TODO: find space for these sprites!
   ;; Sets I to the location of the sprite for the character in VX. Characters 0-F (in hexadecimal) are represented by a 4x5 font.
   (func $FX29 (param $x i32)
-    (call $store16_u_be
+    (i32.store16
       (i32.const 0x0ea2)
       (i32.const 0x0ec0)
     )
@@ -980,7 +964,7 @@
   ;; Stores the binary-coded decimal representation of VX, with the most significant of three digits at the address in I
   (func $FX33 (param $x i32) (local $i i32)
     (set_local $i
-      (call $load16_u_be
+      (i32.load16_u
         (i32.const 0x0ea2)
       )
     )
@@ -1025,7 +1009,7 @@
   (func $FX55 (param $x i32)
     (call $move_memory
       (i32.const 0x0eb0)
-      (call $load16_u_be
+      (i32.load16_u
         (i32.const 0x0ea2)
       )
       (get_local $x)
@@ -1034,7 +1018,7 @@
   ;; Fills V0 to VX (including VX) with values from memory starting at address I (increased by X)
   (func $FX65 (param $x i32)
     (call $move_memory
-      (call $load16_u_be
+      (i32.load16_u
         (i32.const 0x0ea2)
       )
       (i32.const 0x0eb0)
@@ -1113,12 +1097,12 @@
         )
       )
     )
-    (call $store16_u_be
+    (i32.store16
       (i32.const 0x0ea0)
       (call_indirect (type $processInstruction)
         ;; load program counter
         (tee_local $pc
-          (call $load16_u_be
+          (i32.load16_u
             (i32.const 0x0ea0)
           )
         )

@@ -16,11 +16,17 @@ const read = (descriptor, index) => {
   if (descriptor.bits % 8 !== 0) {
     throw new Error(`No support for non-byte aligned values ${descriptor.bits}`);
   }
+  let value = 0;
   const bytes = descriptor.bits / 8;
   const offset = descriptor.offset + index * bytes;
-  let value = 0;
-  for (let i = 0; i < bytes; i++) {
-    value = (value << 8) | array[offset + i];
+  if (descriptor.bigEndian) {
+    for (let i = 0; i < bytes; i++) {
+      value = (value << 8) | array[offset + i];
+    }
+  } else {
+    for (let i = bytes - 1; i >= 0; i--) {
+      value = (value << 8) | array[offset + i];
+    }
   }
   return value;
 };
@@ -34,9 +40,16 @@ const write = (descriptor, index, value) => {
   }
   const bytes = descriptor.bits / 8;
   const offset = descriptor.offset + index * bytes;
-  for (let i = bytes - 1; i >= 0; i--) {
-    array[offset + i] = value & 0xff;
-    value = value >> 8;
+  if (descriptor.bigEndian) {
+    for (let i = bytes - 1; i >= 0; i--) {
+      array[offset + i] = value & 0xff;
+      value = value >> 8;
+    }
+  } else {
+    for (let i = 0; i < bytes; i++) {
+      array[offset + i] = value & 0xff;
+      value = value >> 8;
+    }
   }
   return value;
 };

@@ -1061,39 +1061,144 @@
       $8XYE
     )
   )
-  (func (export "tick") (local $pc i32) (local $op i32) (local $timer i32)
+  (func (export "tick")
+    ;; internal registers, required by > 1 instruction
+    (local $programCounter i32)
+    (local $address i32)
+    (local $instruction i32)
+    (local $stackPointer i32)
+    (local $delayTimer i32)
+    (local $soundTimer i32)
+    ;; loop variables, default to 0 causing a single iteration
+    ;; loop index
+    (local $i i32)
+    ;; loop limit - equivalent to `do {} while (i < n)`
+    (local $n i32)
+    ;; instruction specific working variables
+    (local $a i32)
+    (local $b i32)
+    (local $c i32)
+    (local $d i32)
+    ;; load internal registers
+    ;; load programCounter
+    (set_local $programCounter
+      (i32.load16_u
+        (i32.const 0x0ea0)
+      )
+    )
+    ;; load address
+    (set_local $address
+      (i32.load16_u
+        (i32.const 0x0ea2)
+      )
+    )
+    ;; load instruction (big endian)
+    (set_local $instruction
+      (i32.or
+        (i32.shl
+          (i32.load8_u
+            (get_local $programCounter)
+          )
+          (i32.const 8)
+        )
+        (i32.load8_u offset=1
+          (get_local $programCounter)
+        )
+      )
+    )
+    ;; load stackPointer
+    (set_local $stackPointer
+      (i32.load16_u
+        (i32.const 0x0ecf)
+      )
+    )
+    ;; load delayTimer
+    (set_local $delayTimer
+      (i32.load8_u
+        (i32.const 0xea4)
+      )
+    )
+    ;; load soundTimer
+    (set_local $soundTimer
+      (i32.load8_u
+        (i32.const 0xea5)
+      )
+    )
+
+    ;; extract xxAA
+    ;; extract xBBB
+    ;; extract xXxx
+    ;; extract xxYx
+    ;; extract xxxZ
+    ;; load register X
+    ;; load register Y
+    ;; block
+    ;; loop
+
+
+    ;; loop if i < n
+    ;; auto-increment programCounter
+    ;; store register X
+
+    ;; store soundTimer
+    (i32.store8
+      (i32.const 0xea5)
+      (get_local $soundTimer)
+    )
+    ;; store delayTimer
+    (i32.store8
+      (i32.const 0xea4)
+      (get_local $delayTimer)
+    )
+    ;; store stackPointer
+    (i32.store16
+      (i32.const 0x0ecf)
+      (get_local $stackPointer)
+    )
+    ;; store address
+    (i32.store16
+      (i32.const 0x0ea2)
+      (get_local $address)
+    )
+    ;; store programCounter
+    (i32.store16
+      (i32.const 0x0ea0)
+      (get_local $programCounter)
+    )
+
+
     ;; decrement timers
     (i32.store8
       (i32.const 0xea4)
       (select
-        (tee_local $timer
+        (tee_local $delayTimer
           (i32.load8_u
             (i32.const 0xea4)
           )
         )
         (i32.sub
-          (get_local $timer)
+          (get_local $delayTimer)
           (i32.const 1)
         )
         (i32.eqz
-          (get_local $timer)
+          (get_local $delayTimer)
         )
       )
     )
     (i32.store8
       (i32.const 0xea5)
       (select
-        (tee_local $timer
+        (tee_local $soundTimer
           (i32.load8_u
             (i32.const 0xea5)
           )
         )
         (i32.sub
-          (get_local $timer)
+          (get_local $soundTimer)
           (i32.const 1)
         )
         (i32.eqz
-          (get_local $timer)
+          (get_local $soundTimer)
         )
       )
     )
@@ -1101,21 +1206,21 @@
       (i32.const 0x0ea0)
       (call_indirect (type $processInstruction)
         ;; load program counter
-        (tee_local $pc
+        (tee_local $programCounter
           (i32.load16_u
             (i32.const 0x0ea0)
           )
         )
         ;; load instruction
-        (tee_local $op
+        (tee_local $instruction
           (call $load16_u_be
-            (get_local $pc)
+            (get_local $programCounter)
           )
         )
         ;; dispatch on leading nibble
         (i32.shr_u
           (i32.and
-            (get_local $op)
+            (get_local $instruction)
             (i32.const 0xf000)
           )
           (i32.const 12)

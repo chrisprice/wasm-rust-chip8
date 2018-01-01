@@ -8,13 +8,15 @@ beforeAll(async () => {
 });
 beforeEach(clear);
 
-test('program counter increments on noop', () => {
+test('program counter increments on normal instruction', () => {
+  write(descriptors.PROGRAM, 0, 0x8000);
   wasmInstance.exports.tick();
   expect(read(descriptors.PC, 0)).toEqual(2);
 });
 
-test('program counter increments on noop', () => {
+test('program counter increments on normal instruction', () => {
   write(descriptors.PC, 0, 0x200);
+  write(descriptors.PROGRAM, 0x100, 0x8000);
   wasmInstance.exports.tick();
   expect(read(descriptors.PC, 0)).toEqual(0x202);
 });

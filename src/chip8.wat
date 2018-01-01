@@ -2,29 +2,6 @@
   (import "_" "mem" (memory 1))
   (data (i32.const 0xec0) "\60\90\20\00\20")
   (data (i32.const 0xea6) "\aa")
-  ;; (type $processInstruction (func (param $pc i32) (param $op i32) (result i32)))
-  ;; (func $incrementAddress (param $value i32) (result i32)
-  ;;   (i32.add
-  ;;     (i32.const 2)
-  ;;     (get_local $value)
-  ;;   )
-  ;; )
-  ;; (func $load16_u_be (param $offset i32) (result i32)
-  ;;   (i32.or
-  ;;     (i32.shl
-  ;;       (i32.load8_u
-  ;;         (get_local $offset)
-  ;;       )
-  ;;       (i32.const 8)
-  ;;     )
-  ;;     (i32.load8_u
-  ;;       (i32.add
-  ;;         (get_local $offset)
-  ;;         (i32.const 1)
-  ;;       )
-  ;;     )
-  ;;   )
-  ;; )
   ;; (func $move_memory (param $from i32) (param $to i32) (param $repeat i32) (local $i i32)
   ;;   (loop $loop
   ;;     (i32.store8
@@ -50,158 +27,6 @@
   ;;         (get_local $repeat)
   ;;       )
   ;;     )
-  ;;   )
-  ;; )
-  ;; (func $NOOP (param $pc i32) (param $op i32) (result i32)
-  ;;   (call $incrementAddress
-  ;;     (get_local $pc)
-  ;;   )
-  ;; )
-  ;; ;; Native call to NNN (disp_clear=00E0, return=00EE)
-  ;; (func $0NNN  (param $pc i32) (param $op i32) (result i32)
-  ;;   (if (result i32)
-  ;;     (i32.eq (get_local $op) (i32.const 0x00e0))
-  ;;     (then
-  ;;       (call $00E0
-  ;;         (get_local $pc)
-  ;;         (get_local $op)
-  ;;       )
-  ;;     )
-  ;;     (else
-  ;;       (if (result i32)
-  ;;         (i32.eq (get_local $op) (i32.const 0x00ee))
-  ;;         (then
-  ;;           (call $00EE
-  ;;             (get_local $pc)
-  ;;             (get_local $op)
-  ;;           )
-  ;;         )
-  ;;         (else
-  ;;           (call $NOOP
-  ;;             (get_local $pc)
-  ;;             (get_local $op)
-  ;;           )
-  ;;         )
-  ;;       )
-  ;;     )
-  ;;   )
-  ;; )
-  ;; ;; clear display
-  ;; (func $00E0 (param $pc i32) (param $op i32) (result i32) (local $i i32)
-  ;;   (loop $loop
-  ;;     (i64.store offset=0xf00
-  ;;       (i32.mul
-  ;;         (get_local $i)
-  ;;         (i32.const 8)
-  ;;       )
-  ;;       (i64.const 0)
-  ;;     )
-  ;;     (br_if $loop
-  ;;       (i32.lt_u
-  ;;         (tee_local $i
-  ;;           (i32.add
-  ;;             (get_local $i)
-  ;;             (i32.const 1)
-  ;;           )
-  ;;         )
-  ;;         (i32.const 32)
-  ;;       )
-  ;;     )
-  ;;   )
-  ;;   (call $incrementAddress
-  ;;     (get_local $pc)
-  ;;   )
-  ;; )
-  ;; ;; Return
-  ;; (func $00EE (param $pc i32) (param $op i32) (result i32) (local $sp i32)
-  ;;   ;; load decremented stack pointer
-  ;;   (set_local $sp
-  ;;     (i32.sub
-  ;;       (i32.load8_u
-  ;;         (i32.const 0xecf)
-  ;;       )
-  ;;       (i32.const 2)
-  ;;     )
-  ;;   )
-  ;;   ;; store stack pointer
-  ;;   (i32.store8
-  ;;     (i32.const 0xecf)
-  ;;     (get_local $sp)
-  ;;   )
-  ;;   ;; set program counter to address from stack
-  ;;   (i32.load16_u
-  ;;     (i32.add
-  ;;       (i32.const 0xed0)
-  ;;       (get_local $sp)
-  ;;     )
-  ;;   )
-  ;; )
-  ;; ;; Jump to NNN
-  ;; (func $1NNN (param $pc i32) (param $op i32) (result i32)
-  ;;   (i32.and
-  ;;     (i32.const 0x0fff)
-  ;;     (get_local $op)
-  ;;   )
-  ;; )
-  ;; ;; Call NNN
-  ;; (func $2NNN (param $pc i32) (param $op i32) (result i32) (local $sp i32)
-  ;;   ;; load stack pointer
-  ;;   (set_local $sp
-  ;;     (i32.load8_u
-  ;;       (i32.const 0xecf)
-  ;;     )
-  ;;   )
-  ;;   ;; store incremented program counter on stack
-  ;;   (i32.store16
-  ;;     (i32.add
-  ;;       (i32.const 0xed0)
-  ;;       (get_local $sp)
-  ;;     )
-  ;;     (call $incrementAddress
-  ;;       (get_local $pc)
-  ;;     )
-  ;;   )
-  ;;   ;; store incremented stack pointer
-  ;;   (i32.store8
-  ;;     (i32.const 0xecf)
-  ;;     (call $incrementAddress
-  ;;       (get_local $sp)
-  ;;     )
-  ;;   )
-  ;;   ;; set program counter to address
-  ;;   (i32.and
-  ;;     (get_local $op)
-  ;;     (i32.const 0x0fff)
-  ;;   )
-  ;; )
-  ;; ;; Skip the next instruction if vX equals NN
-  ;; (func $3XNN (param $pc i32) (param $op i32) (result i32)
-  ;;   (if
-  ;;     (i32.eq
-  ;;       (i32.load8_u offset=0x0eb0
-  ;;         (i32.shr_u
-  ;;           (i32.and
-  ;;             (get_local $op)
-  ;;             (i32.const 0x0f00)
-  ;;           )
-  ;;           (i32.const 8)
-  ;;         )
-  ;;       )
-  ;;       (i32.and
-  ;;         (get_local $op)
-  ;;         (i32.const 0x00ff)
-  ;;       )
-  ;;     )
-  ;;     (then
-  ;;       (set_local $pc
-  ;;         (call $incrementAddress
-  ;;           (get_local $pc)
-  ;;         )
-  ;;       )
-  ;;     )
-  ;;   )
-  ;;   (call $incrementAddress
-  ;;     (get_local $pc)
   ;;   )
   ;; )
   ;; ;; Skip the next instruction if vX does not equal NN
@@ -1069,7 +894,9 @@
     (local $stackPointer i32)
     (local $delayTimer i32)
     (local $soundTimer i32)
+    (local $key i32)
     ;; operands
+    (local $m i32)
     (local $n i32)
     (local $nn i32)
     (local $nnn i32)
@@ -1157,8 +984,24 @@
         )
       )
     )
+    ;; load key
+    (set_local $key
+      (i32.load8_u
+        (i32.const 0x0ea8)
+      )
+    )
 
     ;; --- EXTRACT OPERANDS ---
+    ;; extract m---
+    (set_local $m
+      (i32.shr_u
+        (i32.and
+          (get_local $instruction)
+          (i32.const 0xf000)
+        )
+        (i32.const 12)
+      )
+    )
     ;; extract ---n
     (set_local $n
       (i32.and
@@ -1211,7 +1054,7 @@
     ;; load register Y (vy)
     (set_local $vy
       (i32.load8_u offset=0x0eb0
-        (get_local $x)
+        (get_local $y)
       )
     )
 
@@ -1233,24 +1076,409 @@
       ;; --- INSTRUCTION PROCESSING ---
       ;; breaking from this block prevents other instruction matching
       (block $instructionProcessing
-        ;; 00e0 clear screen
-        (if (i32.eq (get_local $instruction) (i32.const 0x00e0))
-          (then
-            (i64.store offset=0xf00
-              (i32.mul
-                (get_local $i)
-                (i32.const 8)
+        (block $0xxx
+          (block $1xxx
+            (block $2xxx
+              (block $3xxx
+                (block $4xxx
+                  (block $5xxx
+                    (block $6xxx
+                      (block $7xxx
+                        (block $8xxx
+                          (block $9xxx
+                            (block $axxx
+                              (block $bxxx
+                                (block $cxxx
+                                  (block $dxxx
+                                    (block $exxx
+                                      (block $fxxx
+                                        (br_table $0xxx $1xxx $2xxx $3xxx $4xxx $5xxx $6xxx $7xxx $8xxx $9xxx $axxx $bxxx $cxxx $dxxx $exxx $fxxx
+                                          (get_local $m)
+                                        )
+                                      )
+                                      ;; fx33 bcd
+                                      (i32.store8 offset=0
+                                        (get_local $address)
+                                        (i32.div_u
+                                          (get_local $vx)
+                                          (i32.const 100)
+                                        )
+                                      )
+                                      (i32.store8 offset=1
+                                        (get_local $address)
+                                        (i32.div_u
+                                          (i32.rem_u
+                                            (get_local $vx)
+                                            (i32.const 100)
+                                          )
+                                          (i32.const 10)
+                                        )
+                                      )
+                                      (i32.store8 offset=2
+                                        (get_local $address)
+                                        (i32.rem_u
+                                          (get_local $vx)
+                                          (i32.const 10)
+                                        )
+                                      )
+                                      (br $instructionProcessing)
+                                    )
+                                    ;; ex9e skip if key() == vx
+                                    ;; exa1 skip if key() != vx
+                                    (set_local $m
+                                      (i32.eq
+                                        (get_local $n)
+                                        (i32.const 0xe)
+                                      )
+                                    )
+                                    (set_local $nn
+                                      (get_local $key)
+                                    )
+                                    (br $3xxx)
+                                  )
+                                  ;; dxyn draw at (vx, vy) n bytes starting at address
+                                  (set_local $l
+                                    (get_local $n)
+                                  )
+                                  (i64.store offset=0xf00
+                                    (i32.mul
+                                      (i32.const 8)
+                                      (i32.rem_u
+                                        (i32.add
+                                          (get_local $vy)
+                                          (get_local $i)
+                                        )
+                                        (i32.const 32)
+                                      )
+                                    )
+                                    (tee_local $A
+                                      (i64.xor
+                                        (tee_local $B
+                                          (i64.load offset=0xf00
+                                            (i32.mul
+                                              (i32.const 8)
+                                              (i32.rem_u
+                                                (i32.add
+                                                  (get_local $vy)
+                                                  (get_local $i)
+                                                )
+                                                (i32.const 32)
+                                              )
+                                            )
+                                          )
+                                        )
+                                        (tee_local $C
+                                          (i64.rotl
+                                            (i64.load8_u
+                                              (i32.add
+                                                (get_local $address)
+                                                (get_local $i)
+                                              )
+                                            )
+                                            (i64.sub
+                                              (i64.const 56) ;; 64 - 8
+                                              (i64.extend_u/i32
+                                                (get_local $vx)
+                                              )
+                                            )
+                                          )
+                                        )
+                                      )
+                                    )
+                                  )
+                                  (i32.store8
+                                    (i32.const 0xebf)
+                                    (tee_local $d
+                                      (i32.or
+                                        (get_local $d)
+                                        (i64.ne
+                                          (get_local $A)
+                                          (i64.or
+                                            (get_local $B)
+                                            (get_local $C)
+                                          )
+                                        )
+                                      )
+                                    )
+                                  )
+                                  (br $instructionProcessing)
+                                )
+                                ;; cxnn sets vx = rand() & nn
+                                (set_local $b
+                                  (i32.load8_u
+                                    (i32.const 0x0ea6)
+                                  )
+                                )
+                                (set_local $a
+                                  (i32.load8_u
+                                    (i32.const 0x0ea7)
+                                  )
+                                )
+                                (set_local $b
+                                  (i32.xor
+                                    (get_local $b)
+                                    (i32.shl
+                                      (get_local $b)
+                                      (i32.const 3)
+                                    )
+                                  )
+                                )
+                                (set_local $b
+                                  (i32.xor
+                                    (get_local $b)
+                                    (i32.shr_u
+                                      (get_local $b)
+                                      (i32.const 5)
+                                    )
+                                  )
+                                )
+                                (set_local $b
+                                  (i32.xor
+                                    (get_local $b)
+                                    (i32.shr_u
+                                      (get_local $a)
+                                      (i32.const 5)
+                                    )
+                                  )
+                                )
+                                (i32.store8
+                                  (i32.const 0x0ea6)
+                                  (get_local $b)
+                                )
+                                (i32.store8
+                                  (i32.const 0x0ea7)
+                                  (i32.add
+                                    (get_local $a)
+                                    (i32.const 1)
+                                  )
+                                )
+                                (set_local $nn
+                                  (i32.and
+                                    (get_local $nn)
+                                    (get_local $b)
+                                  )
+                                )
+                                (br $6xxx)
+                              )
+                              ;; bnnn jump v0 + nnn
+                              (set_local $programCounter
+                                (i32.add
+                                  (i32.load8_u
+                                    (i32.const 0x0eb0)
+                                  )
+                                  (get_local $nnn)
+                                )
+                              )
+                              (br $instructionProcessing)
+                            )
+                            ;; annn set i = nnn
+                            (set_local $address
+                              (get_local $nnn)
+                            )
+                            (br $instructionProcessing)
+                          )
+                          ;; 9xy0 skip vx != vy
+                          ;; hack the leading nibble to invert the logic
+                          (set_local $m
+                            (i32.const 0)
+                          )
+                          (br $5xxx)
+                        )
+                        ;; 8xxx
+                        (set_local $nn
+                          (if (result i32)
+                            (i32.and
+                              (get_local $n)
+                              (i32.const 0x4)
+                            )
+                            ;; 8xy4, 8xy5, 8xy6, 8xy7, 8xye
+                            (then
+                              (select
+                                ;; 8xy5 vx - vy, 8xy7 vy - vx
+                                ;; vx > vy (0)  vx - vy (0)  vx - vy (0)  0
+                                ;; vx < vy (1)  vx - vy (0)  vy - vx (1)  1
+                                ;; vx > vy (0)  vy - vx (1)  vx - vy (0)  1
+                                ;; vx < vy (1)  vy - vx (1)  vy - vx (1)  0
+                                ;; carry = xor
+                                (i32.or
+                                  (select
+                                    (i32.sub
+                                      (get_local $vy)
+                                      (get_local $vx)
+                                    )
+                                    (i32.sub
+                                      (get_local $vx)
+                                      (get_local $vy)
+                                    )
+                                    (tee_local $a
+                                      (i32.gt_u
+                                        (get_local $vy)
+                                        (get_local $vx)
+                                      )
+                                    )
+                                  )
+                                  (select
+                                    (i32.const 0x100)
+                                    (i32.const 0x0)
+                                    (i32.xor
+                                      (get_local $a)
+                                      (i32.and
+                                        (get_local $n)
+                                        (i32.const 0x2)
+                                      )
+                                    )
+                                  )
+                                )
+                                ;; 8xy4 vx + vy, 8xy6 vx >> 1, 8xye vx << 1
+                                (select
+                                  (i32.rotl
+                                    (get_local $vx)
+                                    ;; 8xy6 >> 1, 8xye << 1
+                                    ;; shift left 31 to shift right 1
+                                    (select
+                                      (i32.const 1)
+                                      (i32.const 31)
+                                      (i32.and
+                                        (get_local $n)
+                                        (i32.const 0x8)
+                                      )
+                                    )
+                                  )
+                                  (i32.add
+                                    (get_local $vx)
+                                    (get_local $vy)
+                                  )
+                                  (i32.and
+                                    (get_local $n)
+                                    (i32.const 0x2)
+                                  )
+                                )
+                                (i32.and
+                                  (get_local $n)
+                                  (i32.const 0x1)
+                                )
+                              )
+                              tee_local $nn
+                              (i32.store8
+                                (i32.const 0xebf)
+                                (i32.ne
+                                  (i32.const 0x00)
+                                  ;; equivalent to AND 0xffffff00
+                                  (i32.shr_u
+                                    (get_local $nn)
+                                    (i32.const 8)
+                                  )
+                                )
+                              )
+                            )
+                            (else
+                              ;; 8xy0, 8xy1, 8xy2, 8xy3
+                              (select
+                                ;; 8xy2 AND, 8xy3 XOR
+                                (select
+                                  (i32.xor
+                                    (get_local $vx)
+                                    (get_local $vy)
+                                  )
+                                  (i32.and
+                                    (get_local $vx)
+                                    (get_local $vy)
+                                  )
+                                  ;; could stash in a local
+                                  (i32.and
+                                    (get_local $n)
+                                    (i32.const 0x1)
+                                  )
+                                )
+                                ;; 8xy0, 8xy1
+                                (select
+                                  (i32.or
+                                    (get_local $vx)
+                                    (get_local $vy)
+                                  )
+                                  (get_local $vy)
+                                  (i32.and
+                                    (get_local $n)
+                                    (i32.const 0x1)
+                                  )
+                                )
+                                (i32.and
+                                  (get_local $n)
+                                  (i32.const 0x2)
+                                )
+                              )
+                            )
+                          )
+                        )
+                        (br $6xxx)
+                      )
+                      ;; 7xnn set vx += nn
+                      (set_local $nn
+                        (i32.add
+                          (get_local $vx)
+                          (get_local $nn)
+                        )
+                      )
+                      ;; fallthrough
+                    )
+                    ;; 6xnn set vx = nn
+                    (i32.store8 offset=0x0eb0
+                      (get_local $x)
+                      (get_local $nn)
+                    )
+                    (br $instructionProcessing)
+                  )
+                  ;; 5xy0 skip vx == vy
+                  (set_local $nn
+                    (get_local $vy)
+                  )
+                  ;; fallthrough
+                )
+                ;; 4xnn skip vx != nn
+                ;; fallthrough
               )
-              (i64.const 0)
+              ;; 3xnn skip vx == nn
+              (if
+                (i32.xor
+                  (i32.ne (get_local $vx) (get_local $nn))
+                  (i32.and (get_local $m) (i32.const 0x1))
+                )
+                (then
+                  (set_local $programCounter
+                    (i32.add
+                      (get_local $programCounter)
+                      (i32.const 2)
+                    )
+                  )
+                )
+              )
+              (br $instructionProcessing)
             )
-            (set_local $l
-              (i32.const 32)
+            ;; 2nnn call nnn
+            ;; store incremented program counter on stack
+            (i32.store16 offset=0xed0
+              (get_local $stackPointer)
+              (get_local $programCounter)
             )
+            ;; incremented stack pointer
+            (set_local $stackPointer
+              (i32.add
+                (get_local $stackPointer)
+                (i32.const 2)
+              )
+            )
+            ;; fallthrough
           )
+          ;; 1nnn jump nnn
+          (set_local $programCounter
+            (get_local $nnn)
+          )
+          (br $instructionProcessing)
         )
-        ;; 00ee return
-        (if (i32.eq (get_local $instruction) (i32.const 0x00ee))
+        ;; 00e0/00ee
+        (if (i32.and (get_local $instruction) (i32.const 0xe))
           (then
+            ;; 00ee return
             ;; decrement stack pointer
             (set_local $stackPointer
               (i32.sub
@@ -1265,119 +1493,20 @@
               )
             )
           )
-        )
-        ;; 1nnn jump nnn
-        (if (i32.eq (i32.and (get_local $instruction) (i32.const 0xf000)) (i32.const 0x1000))
-          (then
-            (set_local $programCounter
-              (get_local $nnn)
-            )
-          )
-        )
-        ;; 2nnn call nnn
-        (if (i32.eq (i32.and (get_local $instruction) (i32.const 0xf000)) (i32.const 0x2000))
-          (then
-            ;; store incremented program counter on stack
-            (i32.store16 offset=0xed0
-              (get_local $stackPointer)
-              (get_local $programCounter)
-            )
-            ;; incremented stack pointer
-            (set_local $stackPointer
-              (i32.add
-                (get_local $stackPointer)
-                (i32.const 2)
-              )
-            )
-            ;; set program counter to address
-            (set_local $programCounter
-              (get_local $nnn)
-            )
-          )
-        )
-        ;; bnnn jump v0 + nnn
-        (if (i32.eq (i32.and (get_local $instruction) (i32.const 0xf000)) (i32.const 0xb000))
-          (then
-            (set_local $programCounter
-              (i32.add
-                (i32.load8_u
-                  (i32.const 0x0eb0)
-                )
-                (get_local $nnn)
-              )
-            )
-          )
-        )
-        ;; dxyn draw at (vx, vy) n bytes starting at address
-        (if (i32.eq (i32.and (get_local $instruction) (i32.const 0xf000)) (i32.const 0xd000))
-          (then
-            (set_local $l
-              (get_local $n)
-            )
+          (else
+            ;; 00e0 clear screen
             (i64.store offset=0xf00
               (i32.mul
+                (get_local $i)
                 (i32.const 8)
-                (i32.rem_u
-                  (i32.add
-                    (get_local $vy)
-                    (get_local $i)
-                  )
-                  (i32.const 32)
-                )
               )
-              (tee_local $A
-                (i64.xor
-                  (tee_local $B
-                    (i64.load offset=0xf00
-                      (i32.mul
-                        (i32.const 8)
-                        (i32.rem_u
-                          (i32.add
-                            (get_local $vy)
-                            (get_local $i)
-                          )
-                          (i32.const 32)
-                        )
-                      )
-                    )
-                  )
-                  (tee_local $C
-                    (i64.rotl
-                      (i64.load8_u
-                        (i32.add
-                          (get_local $address)
-                          (get_local $i)
-                        )
-                      )
-                      (i64.sub
-                        (i64.const 56) ;; 64 - 8
-                        (i64.extend_u/i32
-                          (get_local $vx)
-                        )
-                      )
-                    )
-                  )
-                )
-              )
+              (i64.const 0)
             )
-            (i32.store8
-              (i32.const 0xebf)
-              (tee_local $d
-                (i32.or
-                  (get_local $d)
-                  (i64.ne
-                    (get_local $A)
-                    (i64.or
-                      (get_local $B)
-                      (get_local $C)
-                    )
-                  )
-                )
-              )
+            (set_local $l
+              (i32.const 32)
             )
           )
         )
-
       )
 
       ;; loop if ++i < l

@@ -1096,32 +1096,144 @@
                                           (get_local $m)
                                         )
                                       )
-                                      ;; fx33 bcd
-                                      (i32.store8 offset=0
-                                        (get_local $address)
-                                        (i32.div_u
-                                          (get_local $vx)
-                                          (i32.const 100)
-                                        )
-                                      )
-                                      (i32.store8 offset=1
-                                        (get_local $address)
-                                        (i32.div_u
-                                          (i32.rem_u
-                                            (get_local $vx)
-                                            (i32.const 100)
+                                      (block $fx07
+                                        (block $fx0a
+                                          (block $fx18
+                                            (block $fx1e
+                                              (block $fx29
+                                                (block $fx33
+                                                  (block $fx15$fx55$fx65
+                                                    (br_table $fx18 $fx29 $fx0a $fx33 $instructionProcessing $fx15$fx55$fx65 $fx1e $fx07
+                                                      (i32.and
+                                                        (get_local $n)
+                                                        (i32.const 0x7)
+                                                      )
+                                                    )
+                                                  )
+                                                  ;; $fx15$fx55$fx65
+                                                  (if
+                                                    (i32.and
+                                                      (get_local $nn)
+                                                      (i32.const 0x40)
+                                                    )
+                                                    (then
+                                                      ;; fx55 mem[address -> address + x] = v[0 -> vx]
+                                                      ;; fx65 v[0 -> vx] = mem[address -> address + x]
+                                                      (set_local $l
+                                                        (i32.add
+                                                          (get_local $x)
+                                                          (i32.const 1)
+                                                        )
+                                                      )
+                                                      (i32.store8
+                                                        (i32.add
+                                                          (select
+                                                            (get_local $address)
+                                                            (i32.const 0xeb0)
+                                                            (tee_local $a
+                                                              (i32.and
+                                                                (get_local $nn)
+                                                                (i32.const 0x10)
+                                                              )
+                                                            )
+                                                          )
+                                                          (get_local $i)
+                                                        )
+                                                        (i32.load8_u
+                                                          (i32.add
+                                                            (select
+                                                              (i32.const 0xeb0)
+                                                              (get_local $address)
+                                                              (get_local $a)
+                                                            )
+                                                            (get_local $i)
+                                                          )
+                                                        )
+                                                      )
+                                                      (br $instructionProcessing)
+                                                    )
+                                                  )
+                                                  (set_local $delayTimer
+                                                    (get_local $vx)
+                                                  )
+                                                  (br $instructionProcessing)
+                                                )
+                                                ;; fx33 bcd
+                                                (i32.store8 offset=0
+                                                  (get_local $address)
+                                                  (i32.div_u
+                                                    (get_local $vx)
+                                                    (i32.const 100)
+                                                  )
+                                                )
+                                                (i32.store8 offset=1
+                                                  (get_local $address)
+                                                  (i32.div_u
+                                                    (i32.rem_u
+                                                      (get_local $vx)
+                                                      (i32.const 100)
+                                                    )
+                                                    (i32.const 10)
+                                                  )
+                                                )
+                                                (i32.store8 offset=2
+                                                  (get_local $address)
+                                                  (i32.rem_u
+                                                    (get_local $vx)
+                                                    (i32.const 10)
+                                                  )
+                                                )
+                                                (br $instructionProcessing)
+                                              )
+                                              ;; fx29 address = sprite(vx)
+                                              ;; TODO: find space!
+                                              (set_local $address
+                                                (i32.const 0xec0)
+                                              )
+                                              (br $instructionProcessing)
+                                            )
+                                            ;; fx1e address += vx
+                                            ;; could share logic with $axxx
+                                            (set_local $address
+                                              (i32.add
+                                                (get_local $vx)
+                                                (get_local $address)
+                                              )
+                                            )
+                                            (br $instructionProcessing)
                                           )
-                                          (i32.const 10)
+                                          ;; fx18 sound(vx)
+                                          (set_local $soundTimer
+                                            (get_local $vx)
+                                          )
+                                          (br $instructionProcessing)
                                         )
-                                      )
-                                      (i32.store8 offset=2
-                                        (get_local $address)
-                                        (i32.rem_u
-                                          (get_local $vx)
-                                          (i32.const 10)
+                                        ;; fx0a vx = wait_for_key()
+                                        (set_local $programCounter
+                                          (i32.sub
+                                            (get_local $programCounter)
+                                            (select
+                                              (i32.const 0)
+                                              (i32.const 2)
+                                              (get_local $key)
+                                            )
+                                          )
                                         )
+                                        ;; could fallthrough
+                                        (set_local $nn
+                                          (select
+                                            (get_local $key)
+                                            (get_local $vx)
+                                            (get_local $key)
+                                          )
+                                        )
+                                        (br $6xxx)
                                       )
-                                      (br $instructionProcessing)
+                                      ;; fx07 vx = delay()
+                                      (set_local $nn
+                                        (get_local $delayTimer)
+                                      )
+                                      (br $6xxx)
                                     )
                                     ;; ex9e skip if key() == vx
                                     ;; exa1 skip if key() != vx

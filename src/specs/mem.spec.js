@@ -37,7 +37,7 @@ test('stores V0 to VX (inclusive) in memory starting at I (increased by X)', () 
   write(descriptors.V, 1, 0x0f);
   write(descriptors.V, 2, 0x0f);
   wasmInstance.exports.tick();
-  expect(read(descriptors.I, 0)).toEqual(0x00110);
+  expect(read(descriptors.I, 0)).toEqual(0x0110);
   expect(read(descriptors.DATA, 0x110)).toEqual(0xf0);
   expect(read(descriptors.DATA, 0x111)).toEqual(0x0f);
   expect(read(descriptors.DATA, 0x112)).toEqual(0x0f);

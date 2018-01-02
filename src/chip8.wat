@@ -1,8 +1,8 @@
 (module
-  (import "_" "mem" (memory 1))
+  (import "_" "_" (memory 1))
   (data (i32.const 0xec0) "\60\90\20\00\20")
   (data (i32.const 0xea6) "\aa")
-  (func (export "tick")
+  (func (export "_")
     ;; internal registers, required by > 1 instruction
     (local $programCounter i32)
     (local $address i32)

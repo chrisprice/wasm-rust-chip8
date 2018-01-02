@@ -112,10 +112,10 @@ const run = async () => {
   const memory = new WebAssembly.Memory({ initial: 1 });
   const instance = await WebAssembly.instantiate(module, {
     _: {
-      mem: memory
+      _: memory
     }
   });
-  const tick = instance.exports.tick;
+  const tick = instance.exports._;
 
   // obtain the various memory sections
   // TODO: reserve memory for interpreter

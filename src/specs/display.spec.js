@@ -12,7 +12,7 @@ test('clears', () => {
   for (let i = 0; i < descriptors.VIDEO.count; i++) {
     write(descriptors.VIDEO, i, 0xff);
   }
-  wasmInstance.exports.tick();
+  wasmInstance.exports._();
   for (let i = 0; i < descriptors.VIDEO.count; i++) {
     expect(read(descriptors.VIDEO, i)).toBe(0x00);
   }
@@ -25,7 +25,7 @@ test('draws a sprite at (vx, vy) of height n offset I', () => {
   write(descriptors.V, 1, 0);
   write(descriptors.PROGRAM, 0, 0xd015);
   write(descriptors.I, 0, descriptors.SPRITE.offset);
-  wasmInstance.exports.tick();
+  wasmInstance.exports._();
   expect(read(descriptors.I, 0)).toBe(descriptors.SPRITE.offset);
   // Each row in VIDEO is encoded as a 64-bit LE. See https://archive.org/stream/byte-magazine-1978-12/1978_12_BYTE_03-12_Life#page/n113/mode/2up
   expect(read(descriptors.VIDEO, 0 * 8 + 7)).toBe(read(descriptors.SPRITE, 0));
@@ -41,7 +41,7 @@ test('draws a sprite at (vx, vy) of height n offset I (wraps x/y)', () => {
   write(descriptors.V, 1, 32);
   write(descriptors.PROGRAM, 0, 0xd015);
   write(descriptors.I, 0, descriptors.SPRITE.offset);
-  wasmInstance.exports.tick();
+  wasmInstance.exports._();
   expect(read(descriptors.I, 0)).toBe(descriptors.SPRITE.offset);
   // Each row in VIDEO is encoded as a 64-bit LE. See https://archive.org/stream/byte-magazine-1978-12/1978_12_BYTE_03-12_Life#page/n113/mode/2up
   expect(read(descriptors.VIDEO, 0 * 8 + 7)).toBe(read(descriptors.SPRITE, 0));
@@ -58,7 +58,7 @@ test('draws a sprite at (vx, vy) of height n offset I (collision)', () => {
   write(descriptors.VIDEO, 7, 0xff);
   write(descriptors.PROGRAM, 0, 0xd015);
   write(descriptors.I, 0, descriptors.SPRITE.offset);
-  wasmInstance.exports.tick();
+  wasmInstance.exports._();
   expect(read(descriptors.I, 0)).toBe(descriptors.SPRITE.offset);
   // Each row in VIDEO is encoded as a 64-bit LE. See https://archive.org/stream/byte-magazine-1978-12/1978_12_BYTE_03-12_Life#page/n113/mode/2up
   expect(read(descriptors.VIDEO, 0 * 8 + 7)).toBe(read(descriptors.SPRITE, 0)^0xff);

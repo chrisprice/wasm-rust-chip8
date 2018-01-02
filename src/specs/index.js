@@ -59,7 +59,7 @@ const init = async () => {
   array.fill(0);
   return new WebAssembly.Instance(wasmModule, {
     _: {
-      mem
+      _: mem
     }
   });
 };

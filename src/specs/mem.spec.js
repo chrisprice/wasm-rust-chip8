@@ -64,7 +64,7 @@ test('stores the BCD representation of vx at I (+0, +1, +2)', () => {
   write(descriptors.V, 0, 0xf1);
   wasmInstance.exports._();
   expect(read(descriptors.I, 0)).toEqual(0x0010);
-  expect(read(descriptors.DATA, 0x10)).toEqual(0x02);
-  expect(read(descriptors.DATA, 0x11)).toEqual(0x04);
   expect(read(descriptors.DATA, 0x12)).toEqual(0x01);
+  expect(read(descriptors.DATA, 0x11)).toEqual(0x04);
+  expect(read(descriptors.DATA, 0x10)).toEqual(0x02);
 });

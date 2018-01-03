@@ -275,26 +275,21 @@
                                                   (br $instructionProcessing)
                                                 )
                                                 ;; fx33 bcd
-                                                (i32.store8 offset=0
-                                                  (get_local $address)
-                                                  (i32.div_u
-                                                    (get_local $vx)
-                                                    (i32.const 100)
-                                                  )
+                                                (set_local $l
+                                                  (i32.const 3)
                                                 )
-                                                (i32.store8 offset=1
-                                                  (get_local $address)
-                                                  (i32.div_u
-                                                    (i32.rem_u
-                                                      (get_local $vx)
-                                                      (i32.const 100)
-                                                    )
+                                                (i32.store8 offset=2
+                                                  (i32.sub
+                                                    (get_local $address)
+                                                    (get_local $i)
+                                                  )
+                                                  (i32.rem_u
+                                                    (get_local $vx)
                                                     (i32.const 10)
                                                   )
                                                 )
-                                                (i32.store8 offset=2
-                                                  (get_local $address)
-                                                  (i32.rem_u
+                                                (set_local $vx
+                                                  (i32.div_u
                                                     (get_local $vx)
                                                     (i32.const 10)
                                                   )

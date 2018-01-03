@@ -1,6 +1,8 @@
 (module
   (import "_" "_" (memory 1))
+  ;; initialise program counter
   (data (i32.const 0xec0) "\60\90\20\00\20")
+  ;; initialise LFSR PRNG
   (data (i32.const 0xea6) "\aa")
   (func (export "_")
     ;; internal registers, required by > 1 instruction
@@ -17,7 +19,6 @@
     (local $nn i32)
     (local $nnn i32)
     (local $x i32)
-    (local $y i32)
     ;; registers
     (local $vx i32)
     (local $vy i32)
@@ -35,32 +36,13 @@
     (local $C i64)
 
     ;; --- LOAD INTERNAL REGISTERS ---
-    ;; load programCounter
-    (set_local $programCounter
-      (i32.load16_u
-        (i32.const 0x0ea0)
-      )
-    )
     ;; load address
     (set_local $address
       (i32.load16_u
         (i32.const 0x0ea2)
       )
     )
-    ;; load instruction (big endian)
-    (set_local $instruction
-      (i32.or
-        (i32.shl
-          (i32.load8_u
-            (get_local $programCounter)
-          )
-          (i32.const 8)
-        )
-        (i32.load8_u offset=1
-          (get_local $programCounter)
-        )
-      )
-    )
+
     ;; load stackPointer
     (set_local $stackPointer
       (i32.load8_u
@@ -109,55 +91,41 @@
     )
 
     ;; --- EXTRACT OPERANDS ---
-    ;; extract m---
-    (set_local $m
-      (i32.shr_u
-        (i32.and
-          (get_local $instruction)
-          (i32.const 0xf000)
-        )
-        (i32.const 12)
-      )
-    )
     ;; extract ---n
     (set_local $n
       (i32.and
-        (get_local $instruction)
+        ;; extract --nn
+        (tee_local $nn
+          (i32.and
+            ;; extract -nnn
+            (tee_local $nnn
+              (i32.and
+                ;; load instruction (big endian)
+                (tee_local $instruction
+                  (i32.or
+                    (i32.shl
+                      (i32.load8_u
+                        ;; load programCounter
+                        (tee_local $programCounter
+                          (i32.load16_u
+                            (i32.const 0x0ea0)
+                          )
+                        )
+                      )
+                      (i32.const 8)
+                    )
+                    (i32.load8_u offset=1
+                      (get_local $programCounter)
+                    )
+                  )
+                )
+                (i32.const 0xfff)
+              )
+            )
+            (i32.const 0xff)
+          )
+        )
         (i32.const 0xf)
-      )
-    )
-    ;; extract --nn
-    (set_local $nn
-      (i32.and
-        (get_local $instruction)
-        (i32.const 0xff)
-      )
-    )
-    ;; extract -nnn
-    (set_local $nnn
-      (i32.and
-        (get_local $instruction)
-        (i32.const 0xfff)
-      )
-    )
-    ;; extract -x--
-    (set_local $x
-      (i32.shr_u
-        (i32.and
-          (get_local $instruction)
-          (i32.const 0xf00)
-        )
-        (i32.const 8)
-      )
-    )
-    ;; extract --y-
-    (set_local $y
-      (i32.shr_u
-        (i32.and
-          (get_local $instruction)
-          (i32.const 0xf0)
-        )
-        (i32.const 4)
       )
     )
 
@@ -165,13 +133,29 @@
     ;; load register X (vx)
     (set_local $vx
       (i32.load8_u offset=0x0eb0
-        (get_local $x)
+        ;; extract -x--
+        (tee_local $x
+          (i32.shr_u
+            (i32.and
+              (get_local $instruction)
+              (i32.const 0xf00)
+            )
+            (i32.const 8)
+          )
+        )
       )
     )
     ;; load register Y (vy)
     (set_local $vy
       (i32.load8_u offset=0x0eb0
-        (get_local $y)
+        ;; extract --y-
+        (i32.shr_u
+          (i32.and
+            (get_local $instruction)
+            (i32.const 0xf0)
+          )
+          (i32.const 4)
+        )
       )
     )
     ;; load register F (vf)
@@ -216,7 +200,16 @@
                                     (block $exxx
                                       (block $fxxx
                                         (br_table $0xxx $1xxx $2xxx $3xxx $4xxx $5xxx $6xxx $7xxx $8xxx $9xxx $axxx $bxxx $cxxx $dxxx $exxx $fxxx
-                                          (get_local $m)
+                                          (tee_local $m
+                                            ;; extract m---
+                                            (i32.shr_u
+                                              (i32.and
+                                                (get_local $instruction)
+                                                (i32.const 0xf000)
+                                              )
+                                              (i32.const 12)
+                                            )
+                                          )
                                         )
                                       )
                                       (block $fx07

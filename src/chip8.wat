@@ -37,19 +37,6 @@
     (local $C i64)
 
     ;; --- LOAD INTERNAL REGISTERS ---
-    ;; load address
-    (set_local $address
-      (i32.load16_u
-        (i32.const 0x0ea2)
-      )
-    )
-
-    ;; load stackPointer
-    (set_local $stackPointer
-      (i32.load8_u
-        (i32.const 0x0ecf)
-      )
-    )
     ;; load timers and store decremented values on tick
     (i32.store16
       (i32.const 0xea4)
@@ -89,9 +76,26 @@
     )
 
     ;; load key
+    ;; could optimise: mutually exclusive load with stackPointer, vy & key
+    ;; switch on m === 0 for stackPointer
     (set_local $key
       (i32.load8_u
         (i32.const 0x0ea8)
+      )
+    )
+
+    ;; load stackPointer
+    (set_local $stackPointer
+      (i32.load8_u
+        (i32.const 0x0ecf)
+      )
+    )
+
+    ;; load address
+    ;; could optimise: mutually exclusive load with stack address
+    (set_local $address
+      (i32.load16_u
+        (i32.const 0x0ea2)
       )
     )
 
@@ -753,6 +757,23 @@
         )
       )
 
+      ;; --- STORE VALUES ---
+      ;; store vf
+      (i32.store8
+        (i32.const 0xebf)
+        (get_local $vf)
+      )
+      ;; store stackPointer
+      (i32.store8
+        (i32.const 0x0ecf)
+        (get_local $stackPointer)
+      )
+      ;; store address
+      (i32.store16
+        (i32.const 0x0ea2)
+        (get_local $address)
+      )
+
       ;; loop if ++i < l
       (br_if $loop
         (i32.lt_u
@@ -767,23 +788,8 @@
       )
     )
 
-    ;; --- STORE REGISTERS ---
-    ;; store vf
-    (i32.store8
-      (i32.const 0xebf)
-      (get_local $vf)
-    )
-    ;; --- STORE INTERNAL REGISTERS ---
-    ;; store stackPointer
-    (i32.store8
-      (i32.const 0x0ecf)
-      (get_local $stackPointer)
-    )
-    ;; store address
-    (i32.store16
-      (i32.const 0x0ea2)
-      (get_local $address)
-    )
+
+    ;; --- STORE PROGRAM COUNTER ---
     ;; store programCounter
     (i32.store16
       (i32.const 0x0ea0)

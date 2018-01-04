@@ -27,12 +27,19 @@
     ;; loop variables
     (local $i i32)
     (local $l i32)
+    ;; per-iteration store addresses/values
+    ;; could make these offsets from OOB address
+    (local $address8 i32)
+    (local $value8 i32)
+    (local $address16 i32)
+    (local $value16 i32)
+    (local $address64 i32)
+    (local $value64 i64)
     ;; instruction specific working variables
     (local $a i32)
     (local $b i32)
     (local $c i32)
     (local $d i32)
-    (local $A i64)
     (local $B i64)
     (local $C i64)
 
@@ -77,6 +84,7 @@
 
     ;; load key
     ;; could optimise: mutually exclusive load with stackPointer, vy & key
+    ;; could include nn which would collapse 3xnn, 4xnn, 5xy0, 9xy0, ex9e & exa1
     ;; switch on m === 0 for stackPointer
     (set_local $key
       (i32.load8_u
@@ -167,12 +175,6 @@
         )
       )
     )
-    ;; load register F (vf)
-    (set_local $vf
-      (i32.load8_u
-        (i32.const 0x0ebf)
-      )
-    )
 
     ;; increment programCounter
     (set_local $programCounter
@@ -250,7 +252,7 @@
                                                           (i32.const 1)
                                                         )
                                                       )
-                                                      (i32.store8
+                                                      (set_local $address8
                                                         (i32.add
                                                           (select
                                                             (get_local $address)
@@ -264,6 +266,8 @@
                                                           )
                                                           (get_local $i)
                                                         )
+                                                      )
+                                                      (set_local $value8
                                                         (i32.load8_u
                                                           (i32.add
                                                             (select
@@ -280,8 +284,10 @@
                                                   )
                                                   ;; fx15 delay(vx)
                                                   ;; store delayTimer
-                                                  (i32.store8
+                                                  (set_local $address8
                                                     (i32.const 0xea4)
+                                                  )
+                                                  (set_local $value8
                                                     (get_local $vx)
                                                   )
                                                   (br $instructionProcessing)
@@ -290,11 +296,16 @@
                                                 (set_local $l
                                                   (i32.const 3)
                                                 )
-                                                (i32.store8 offset=2
+                                                (set_local $address8
                                                   (i32.sub
-                                                    (get_local $address)
+                                                    (i32.add
+                                                      (get_local $address)
+                                                      (i32.const 2)
+                                                    )
                                                     (get_local $i)
                                                   )
+                                                )
+                                                (set_local $value8
                                                   (i32.rem_u
                                                     (get_local $vx)
                                                     (i32.const 10)
@@ -310,14 +321,20 @@
                                               )
                                               ;; fx29 address = sprite(vx)
                                               ;; TODO: find space!
-                                              (set_local $address
+                                              (set_local $address16
+                                                (i32.const 0x02)
+                                              )
+                                              (set_local $value16
                                                 (i32.const 0xec0)
                                               )
                                               (br $instructionProcessing)
                                             )
                                             ;; fx1e address += vx
                                             ;; could share logic with $axxx
-                                            (set_local $address
+                                            (set_local $address16
+                                              (i32.const 0x02)
+                                            )
+                                            (set_local $value16
                                               (i32.add
                                                 (get_local $vx)
                                                 (get_local $address)
@@ -327,8 +344,10 @@
                                           )
                                           ;; fx18 sound(vx)
                                           ;; store soundTimer
-                                          (i32.store8
+                                          (set_local $address8
                                             (i32.const 0xea5)
+                                          )
+                                          (set_local $value8
                                             (get_local $vx)
                                           )
                                           (br $instructionProcessing)
@@ -377,7 +396,7 @@
                                   (set_local $l
                                     (get_local $n)
                                   )
-                                  (i64.store offset=0xf00
+                                  (set_local $address64
                                     (i32.mul
                                       (i32.const 8)
                                       (i32.rem_u
@@ -388,51 +407,51 @@
                                         (i32.const 32)
                                       )
                                     )
-                                    (tee_local $A
-                                      (i64.xor
-                                        (tee_local $B
-                                          (i64.load offset=0xf00
-                                            (i32.mul
-                                              (i32.const 8)
-                                              (i32.rem_u
-                                                (i32.add
-                                                  (get_local $vy)
-                                                  (get_local $i)
-                                                )
-                                                (i32.const 32)
-                                              )
-                                            )
-                                          )
-                                        )
-                                        (tee_local $C
-                                          (i64.rotl
-                                            (i64.load8_u
-                                              (i32.add
-                                                (get_local $address)
-                                                (get_local $i)
-                                              )
-                                            )
-                                            (i64.sub
-                                              (i64.const 56) ;; 64 - 8
-                                              (i64.extend_u/i32
-                                                (get_local $vx)
-                                              )
-                                            )
-                                          )
-                                        )
-                                      )
-                                    )
                                   )
-                                  (set_local $vf
-                                    (tee_local $d
-                                      (i32.or
-                                        (get_local $d)
-                                        (i64.ne
-                                          (get_local $A)
-                                          (i64.or
-                                            (get_local $B)
-                                            (get_local $C)
+                                  (set_local $address8
+                                    (i32.const 0xebf)
+                                  )
+                                  (set_local $value8
+                                    (i32.or
+                                      (get_local $value8)
+                                      (i64.ne
+                                        (tee_local $value64
+                                          (i64.xor
+                                            (tee_local $B
+                                              (i64.load offset=0xf00
+                                                (i32.mul
+                                                  (i32.const 8)
+                                                  (i32.rem_u
+                                                    (i32.add
+                                                      (get_local $vy)
+                                                      (get_local $i)
+                                                    )
+                                                    (i32.const 32)
+                                                  )
+                                                )
+                                              )
+                                            )
+                                            (tee_local $C
+                                              (i64.rotl
+                                                (i64.load8_u
+                                                  (i32.add
+                                                    (get_local $address)
+                                                    (get_local $i)
+                                                  )
+                                                )
+                                                (i64.sub
+                                                  (i64.const 56) ;; 64 - 8
+                                                  (i64.extend_u/i32
+                                                    (get_local $vx)
+                                                  )
+                                                )
+                                              )
+                                            )
                                           )
+                                        )
+                                        (i64.or
+                                          (get_local $B)
+                                          (get_local $C)
                                         )
                                       )
                                     )
@@ -508,7 +527,10 @@
                               (br $instructionProcessing)
                             )
                             ;; annn set i = nnn
-                            (set_local $address
+                            (set_local $address16
+                              (i32.const 0x02)
+                            )
+                            (set_local $value16
                               (get_local $nnn)
                             )
                             (br $instructionProcessing)
@@ -535,7 +557,10 @@
                                           )
                                         )
                                         ;; 8xye set vx = vy << 1
-                                        (set_local $vf
+                                        (set_local $address16
+                                          (i32.const 0x1f)
+                                        )
+                                        (set_local $value16
                                           (i32.shr_u
                                             (get_local $vx)
                                             (i32.const 7)
@@ -550,7 +575,10 @@
                                         (br $6xxx)
                                       )
                                       ;; 8xy7 set vx = vy - vx
-                                      (set_local $vf
+                                      (set_local $address16
+                                        (i32.const 0x1f)
+                                      )
+                                      (set_local $value16
                                         (tee_local $a
                                           (i32.gt_u
                                             (get_local $vx)
@@ -574,7 +602,10 @@
                                       (br $6xxx)
                                     )
                                     ;; 8xy6 set vx = vy >> 1
-                                    (set_local $vf
+                                    (set_local $address16
+                                      (i32.const 0x1f)
+                                    )
+                                    (set_local $value16
                                       (i32.and
                                         (get_local $vx)
                                         (i32.const 0x01)
@@ -589,7 +620,10 @@
                                     (br $6xxx)
                                   )
                                   ;; 8xy5 set vx -= vy
-                                  (set_local $vf
+                                  (set_local $address16
+                                    (i32.const 0x1f)
+                                  )
+                                  (set_local $value16
                                     (tee_local $a
                                       (i32.gt_u
                                         (get_local $vy)
@@ -619,7 +653,10 @@
                                     (get_local $vy)
                                   )
                                 )
-                                (set_local $vf
+                                (set_local $address16
+                                  (i32.const 0x1f)
+                                )
+                                (set_local $value16
                                   (i32.shr_u
                                     (get_local $nn)
                                     (i32.const 8)
@@ -670,8 +707,13 @@
                       ;; fallthrough
                     )
                     ;; 6xnn set vx = nn
-                    (i32.store8 offset=0x0eb0
-                      (get_local $x)
+                    (set_local $address8
+                      (i32.add
+                        (i32.const 0xeb0)
+                        (get_local $x)
+                      )
+                    )
+                    (set_local $value8
                       (get_local $nn)
                     )
                     (br $instructionProcessing)
@@ -704,12 +746,20 @@
             )
             ;; 2nnn call nnn
             ;; store incremented program counter on stack
-            (i32.store16 offset=0xed0
-              (get_local $stackPointer)
+            (set_local $address16
+              (i32.add
+                (i32.const 0x30)
+                (get_local $stackPointer)
+              )
+            )
+            (set_local $value16
               (get_local $programCounter)
             )
             ;; incremented stack pointer
-            (set_local $stackPointer
+            (set_local $address8
+              (i32.const 0xecf)
+            )
+            (set_local $value8
               (i32.add
                 (get_local $stackPointer)
                 (i32.const 2)
@@ -728,27 +778,31 @@
           (then
             ;; 00ee return
             ;; decrement stack pointer
-            (set_local $stackPointer
-              (i32.sub
-                (get_local $stackPointer)
-                (i32.const 2)
-              )
+            (set_local $address8
+              (i32.const 0xecf)
             )
             ;; set program counter to address from stack
             (set_local $programCounter
               (i32.load16_u offset=0xed0
-                (get_local $stackPointer)
+                (tee_local $value8
+                  (i32.sub
+                    (get_local $stackPointer)
+                    (i32.const 2)
+                  )
+                )
               )
             )
           )
           (else
             ;; 00e0 clear screen
-            (i64.store offset=0xf00
-              (i32.mul
-                (get_local $i)
-                (i32.const 8)
+            (set_local $address64
+              (i32.or
+                (i32.const 0)
+                (i32.mul
+                  (get_local $i)
+                  (i32.const 8)
+                )
               )
-              (i64.const 0)
             )
             (set_local $l
               (i32.const 32)
@@ -758,20 +812,18 @@
       )
 
       ;; --- STORE VALUES ---
-      ;; store vf
+      ;; could move these to avoid storing OOB
       (i32.store8
-        (i32.const 0xebf)
-        (get_local $vf)
+        (get_local $address8)
+        (get_local $value8)
       )
-      ;; store stackPointer
-      (i32.store8
-        (i32.const 0x0ecf)
-        (get_local $stackPointer)
+      (i32.store16 offset=0xea0
+        (get_local $address16)
+        (get_local $value16)
       )
-      ;; store address
-      (i32.store16
-        (i32.const 0x0ea2)
-        (get_local $address)
+      (i64.store offset=0xf00
+        (get_local $address64)
+        (get_local $value64)
       )
 
       ;; loop if ++i < l

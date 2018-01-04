@@ -5,6 +5,7 @@
   ;; initialise LFSR PRNG
   (data (i32.const 0xea6) "\aa")
   (func (export "_")
+    (param $timerTick i32)
     ;; internal registers, required by > 1 instruction
     (local $programCounter i32)
     (local $address i32)
@@ -49,40 +50,44 @@
         (i32.const 0x0ecf)
       )
     )
-    ;; load (and decrement if > 0) delayTimer
-    (set_local $delayTimer
-      (select
-        (tee_local $delayTimer
-          (i32.load8_u
+    ;; load timers and store decremented values on tick
+    (i32.store16
+      (i32.const 0xea4)
+      (i32.sub
+        (tee_local $a
+          (i32.load16_u
             (i32.const 0xea4)
           )
         )
-        (i32.sub
-          (get_local $delayTimer)
-          (i32.const 1)
-        )
-        (i32.eqz
-          (get_local $delayTimer)
-        )
-      )
-    )
-    ;; load (and decrement if > 0) soundTimer
-    (set_local $soundTimer
-      (select
-        (tee_local $soundTimer
-          (i32.load8_u
-            (i32.const 0xea5)
+        (i32.or
+          (select
+            (get_local $timerTick)
+            (i32.const 0)
+            (tee_local $delayTimer
+              (i32.and
+                (get_local $a)
+                (i32.const 0xff)
+              )
+            )
+          )
+          (select
+            (i32.shl
+              (get_local $timerTick)
+              (i32.const 8)
+            )
+            (i32.const 0)
+            (tee_local $soundTimer
+              ;; >> 8 === & 0xff00 but saves a byte (1 byte literal versus 2)
+              (i32.shr_u
+                (get_local $a)
+                (i32.const 8)
+              )
+            )
           )
         )
-        (i32.sub
-          (get_local $soundTimer)
-          (i32.const 1)
-        )
-        (i32.eqz
-          (get_local $soundTimer)
-        )
       )
     )
+
     ;; load key
     (set_local $key
       (i32.load8_u
@@ -269,7 +274,10 @@
                                                       (br $instructionProcessing)
                                                     )
                                                   )
-                                                  (set_local $delayTimer
+                                                  ;; fx15 delay(vx)
+                                                  ;; store delayTimer
+                                                  (i32.store8
+                                                    (i32.const 0xea4)
                                                     (get_local $vx)
                                                   )
                                                   (br $instructionProcessing)
@@ -314,7 +322,9 @@
                                             (br $instructionProcessing)
                                           )
                                           ;; fx18 sound(vx)
-                                          (set_local $soundTimer
+                                          ;; store soundTimer
+                                          (i32.store8
+                                            (i32.const 0xea5)
                                             (get_local $vx)
                                           )
                                           (br $instructionProcessing)
@@ -764,16 +774,6 @@
       (get_local $vf)
     )
     ;; --- STORE INTERNAL REGISTERS ---
-    ;; store soundTimer
-    (i32.store8
-      (i32.const 0xea5)
-      (get_local $soundTimer)
-    )
-    ;; store delayTimer
-    (i32.store8
-      (i32.const 0xea4)
-      (get_local $delayTimer)
-    )
     ;; store stackPointer
     (i32.store8
       (i32.const 0x0ecf)

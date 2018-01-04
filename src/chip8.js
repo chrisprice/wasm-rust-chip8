@@ -115,7 +115,15 @@ const run = async () => {
       _: memory
     }
   });
-  const tick = instance.exports._;
+  let lastTick = performance.now();
+  const tick = () => {
+    const now = performance.now();
+    const timerTick = now - lastTick > (1000 / 60);
+    if (timerTick) {
+      lastTick = now;
+    }
+    instance.exports._(timerTick);
+  }
 
   // obtain the various memory sections
   // TODO: reserve memory for interpreter
@@ -244,12 +252,10 @@ const run = async () => {
   const runloop = () => {
     if (running) {
       requestAnimationFrame(runloop);
-      tick();
+      for (var i = 0; i < 10; i++) {
+        tick();
+      }
       updateUI();
-      // for (var i = 0; i < 10; i++) {
-      //   exports.execute_cycle();
-      // }
-      // exports.decrement_timers();
     }
   };
 

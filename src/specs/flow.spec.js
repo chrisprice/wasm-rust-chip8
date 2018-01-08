@@ -9,21 +9,21 @@ beforeAll(async () => {
 beforeEach(clear);
 
 test('program counter increments on normal instruction', () => {
-  write(descriptors.PROGRAM, 0, 0x8000);
-  wasmInstance.exports._();
+  write(descriptors.PROGRAM, 0, 0x0000);
+  console.log(wasmInstance.exports._());
   expect(read(descriptors.PC, 0)).toEqual(2);
 });
 
 test('program counter increments on normal instruction', () => {
   write(descriptors.PC, 0, 0x200);
   write(descriptors.PROGRAM, 0x100, 0x8000);
-  wasmInstance.exports._();
+  console.log(wasmInstance.exports._());
   expect(read(descriptors.PC, 0)).toEqual(0x202);
 });
 
 test('jumps to address NNN', () => {
   write(descriptors.PROGRAM, 0, 0x1b0b);
-  wasmInstance.exports._();
+  console.log(wasmInstance.exports._());
   expect(read(descriptors.PC, 0)).toEqual(0xb0b);
 });
 

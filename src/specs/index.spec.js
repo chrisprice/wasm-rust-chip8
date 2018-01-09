@@ -1,11 +1,10 @@
-const { init, clear, array, read, write } = require('./index');
+const { init, array, read, write } = require('./index');
 
 let wasmInstance = null;
 
-beforeAll(async () => {
+beforeEach(async () => {
   wasmInstance = await init()
 });
-beforeEach(clear);
 
 const littleEndianDescriptor = {
   bits: 16,

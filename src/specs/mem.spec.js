@@ -1,12 +1,11 @@
-const { init, clear, read, write } = require('./index');
+const { init, read, write } = require('./index');
 const descriptors = require('./descriptors');
 
 let wasmInstance = null;
 
-beforeAll(async () => {
+beforeEach(async () => {
   wasmInstance = await init()
 });
-beforeEach(clear);
 
 test('sets I to address NNN', () => {
   write(descriptors.PROGRAM, 0, 0xab0a);

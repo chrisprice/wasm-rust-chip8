@@ -1,4 +1,4 @@
-const { init, clear, read, write } = require('./index');
+const { init, read, write } = require('./index');
 const fs = require('fs');
 
 test('wasm output is less than 512 bytes', () => {
